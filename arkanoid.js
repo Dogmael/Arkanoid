@@ -1,15 +1,12 @@
 import { clamp } from "./helpers.js";
 
-var canvas = document.getElementById("arkanoid");
-var ctx = canvas.getContext('2d');
-
 class Ball {
     constructor() {
         this.radius = 5,
             this.x = canvas.width / 2,
             this.y = canvas.height / 2,
             this.dx = 0,
-            this.dy = 7
+            this.dy = 9
     }
 
     draw() {
@@ -18,7 +15,7 @@ class Ball {
         ctx.fill();
     }
 
-    motion() {
+    motion(map, plank) {
         // Top wall collision
         if (this.y + this.dy - this.radius < 0) { 
             this.dy = -this.dy;
@@ -67,46 +64,34 @@ class Plank {
         ctx.fillRect(this.x, canvas.height - this.height, this.width, this.height);
     }
 
-    motion(timestamp) {
-        if (plank?.start == undefined) {
-            plank.start = timestamp;
-        }
-
-        const elapsed = timestamp - plank.start;
-        plank.x = clamp(plank.x + elapsed*plank.vx*0.08, 0, canvas.width-plank.width);
-
-        ctx.clearRect(0, canvas.height - plank.height, canvas.width, plank.height);
-        plank.draw();
-        
-        if (plank.moving) {
-            requestAnimationFrame(plank.motion);
-        }
+    move(elapsed) {
+        this.x = clamp(this.x + elapsed * this.vx * 0.7, 0, canvas.width - this.width);
     }
 
-    startMotion(key) {
-        if (!this.moving) {
-            if (key == "ArrowRight") {
-                this.vx = 1;
-            } else {
-                this.vx = -1;
-            }
-            this.moving = true;
-            this.start = null;
-            requestAnimationFrame(this.motion);
-        }
+    startMotion(direction) {
+        this.moving = true;
+        this.vx = direction === "right" ? 1 : -1;
     }
 
     stopMotion() {
         this.moving = false;
+        this.vx = 0;
     }
+
+    // Getters
+    getX() { return this.x; }
+    getY() { return this.y; }
+    getWidth() { return this.width; }
+    getHeight() { return this.height; }
+    isMoving() { return this.moving; }
 }
 
 class Block {
     constructor(x, y, width, height) {
         this.x = x,
-            this.y = y,
-            this.width = width,
-            this.height = height
+        this.y = y,
+        this.width = width,
+        this.height = height
     }
 
     draw() {
@@ -145,15 +130,26 @@ class Map {
 }
 
 class Game {
-    render() {
-        if (ball.y + ball.radius < plank.y + Math.abs(ball.dy)) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height - plank.height);
+    constructor() { 
+        this.plank = new Plank();
+        this.ball = new Ball();
+        this.map = new Map();
+        
+        this.score = 0;
+        this.gameOver = false;
+    }
+    
+    render = () => { // Arrow function pour utilsé l'object englobant en tant que "this"
+        if (this.ball.y + this.ball.radius < this.plank.y + Math.abs(this.ball.dy)) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height - this.plank.height);
 
-            ball.motion();
+            this.ball.motion(this.map, this.plank);
 
-            map.draw();
-            ball.draw();
-        }
+            this.map.draw();
+            this.ball.draw();
+        } else {
+            game.gameOver = true;
+        } 
     }
 
     collision(rectangle, circle) {
@@ -167,27 +163,47 @@ class Game {
         else
             return false;
     }
+
+    update(timestamp) {
+        if (this.plank.isMoving()) {
+            if (!this.lastTimestamp) {
+                this.lastTimestamp = timestamp;
+            }
+            const elapsed = timestamp - this.lastTimestamp;
+            this.plank.move(elapsed);
+            this.lastTimestamp = timestamp;
+
+            ctx.clearRect(0, canvas.height - this.plank.getHeight(), canvas.width, this.plank.getHeight());
+            this.plank.draw(ctx);
+
+            requestAnimationFrame(this.update.bind(this));
+        } else {
+            this.lastTimestamp = null;
+        }
+    }
+
+    handleKeyDown(event) {
+        if (event.key === "ArrowRight" || event.key == "ArrowLeft") {
+            this.plank.startMotion(event.key === "ArrowRight" ? "right" : "left");
+            requestAnimationFrame(this.update.bind(this));
+        }
+    }
+    
+    handleKeyUp(event) {
+        if (event.key === "ArrowRight" || event.key == "ArrowLeft") {
+            this.plank.stopMotion();
+        }  
+    }
+
 }
 
-var plank = new Plank();
-var ball = new Ball();
-var map = new Map();
-
+// Boucle principale
+var canvas = document.getElementById("arkanoid");
+var ctx = canvas.getContext('2d');
 var game = new Game();
 
 setInterval(game.render, 17)
 
-addEventListener("keydown", handleKeyDown);
-addEventListener("keyup", handleKeyUp)
-
-function handleKeyDown(event) {
-    if (event.key === "ArrowRight" || event.key == "ArrowLeft") {
-        plank.startMotion(event.key);
-    }
-}
-
-function handleKeyUp(event) {
-    if (event.key === "ArrowRight" || event.key == "ArrowLeft") {
-        plank.stopMotion();
-    }  
-}
+//Plank mouvements
+addEventListener("keydown", game.handleKeyDown.bind(game));
+addEventListener("keyup", game.handleKeyUp.bind(game));
