@@ -142,12 +142,14 @@ class Game {
     
     render = () => { // Arrow function pour utilsé l'object englobant en tant que "this"
         if (this.ball.y + this.ball.radius < this.plank.y + Math.abs(this.ball.dy)) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height - this.plank.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             this.ball.motion(this.map, this.plank);
 
             this.map.draw();
             this.ball.draw();
+            this.plank.draw();
+
         } else {
             game.gameOver = true;
         }
@@ -176,9 +178,6 @@ class Game {
             const elapsed = timestamp - this.lastTimestamp;
             this.plank.move(elapsed);
             this.lastTimestamp = timestamp;
-
-            ctx.clearRect(0, canvas.height - this.plank.getHeight(), canvas.width, this.plank.getHeight());
-            this.plank.draw(ctx);
 
             requestAnimationFrame(this.updatePlank.bind(this));
         } else {
