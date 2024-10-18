@@ -29,6 +29,7 @@ class Ball {
                     this.dy = -this.dy;
 
                 map.blocks.splice(blockNumber,1);
+                game.score += 1;
             }
         }
 
@@ -149,7 +150,10 @@ class Game {
             this.ball.draw();
         } else {
             game.gameOver = true;
-        } 
+        }
+
+        const score = document.getElementById("score");
+        score.innerText = game.score;
     }
 
     collision(rectangle, circle) {
@@ -164,7 +168,7 @@ class Game {
             return false;
     }
 
-    update(timestamp) {
+    updatePlank(timestamp) {
         if (this.plank.isMoving()) {
             if (!this.lastTimestamp) {
                 this.lastTimestamp = timestamp;
@@ -176,7 +180,7 @@ class Game {
             ctx.clearRect(0, canvas.height - this.plank.getHeight(), canvas.width, this.plank.getHeight());
             this.plank.draw(ctx);
 
-            requestAnimationFrame(this.update.bind(this));
+            requestAnimationFrame(this.updatePlank.bind(this));
         } else {
             this.lastTimestamp = null;
         }
@@ -185,7 +189,7 @@ class Game {
     handleKeyDown(event) {
         if (event.key === "ArrowRight" || event.key == "ArrowLeft") {
             this.plank.startMotion(event.key === "ArrowRight" ? "right" : "left");
-            requestAnimationFrame(this.update.bind(this));
+            requestAnimationFrame(this.updatePlank.bind(this));
         }
     }
     
