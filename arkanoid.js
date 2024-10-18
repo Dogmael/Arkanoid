@@ -3,10 +3,10 @@ import { clamp } from "./helpers.js";
 class Ball {
     constructor() {
         this.radius = 5,
-            this.x = canvas.width / 2,
-            this.y = canvas.height / 2,
-            this.dx = 0,
-            this.dy = 9
+        this.x = canvas.width / 2,
+        this.y = canvas.height / 2,
+        this.dx = 0,
+        this.dy = 9
     }
 
     draw() {
@@ -210,3 +210,6 @@ setInterval(game.render, 17)
 //Plank mouvements
 addEventListener("keydown", game.handleKeyDown.bind(game));
 addEventListener("keyup", game.handleKeyUp.bind(game));
+
+// Export for test
+export { Game, Plank, Ball };
