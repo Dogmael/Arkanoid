@@ -1,27 +1,30 @@
-import { Game, Plank, Ball } from './arkanoid.js'
+import { Game, Plank, Ball, CANVAS_WIDTH, CANVAS_HEIGHT } from './arkanoid.js';
 
-import { Game, Plank, Ball } from './path/to/arkanoid.js';
+// Simulation du DOM pour Jest
+document.body.innerHTML = `
+  <div id="score"></div>
+  <canvas id="arkanoid" width="${CANVAS_WIDTH}" height="${CANVAS_HEIGHT}"></canvas>
+`;
 
-// Tableau de positions [ballX, ballY, plankX, plankY, expectedResult]
+const canvas = document.getElementById("arkanoid");
+const ctx = canvas.getContext('2d');
+
 const positions = [
-    [100, 200, 90, 250, true],
-    [150, 300, 140, 350, true], 
-    [200, 400, 180, 450, false], 
-    [250, 500, 230, 550, false], 
-    [300, 600, 290, 650, true], 
-    [350, 700, 340, 750, true], 
-    [400, 800, 390, 850, false], 
-    [450, 900, 440, 950, false], 
-    [500, 1000, 490, 1050, true], 
-    [550, 1100, 540, 1150, true]
+    { ballRadius: 10, plankWidth: 150, plankHeight: 20,  ballX: 200, ballY: 300, plankX: 180, plankY: 350, expectedResult: false },
+    { ballRadius: 10, plankWidth: 150, plankHeight: 20,  ballX: 200, ballY: 680, plankX: 180, plankY: 350, expectedResult: true },
+    { ballRadius: 10, plankWidth: 150, plankHeight: 20,  ballX: 170, ballY: 670, plankX: 180, plankY: 350, expectedResult: false },
+    { ballRadius: 10, plankWidth: 150, plankHeight: 20,  ballX: 190, ballY: 672, plankX: 180, plankY: 350, expectedResult: true },
+    { ballRadius: 10, plankWidth: 150, plankHeight: 20,  ballX: 190, ballY: 672, plankX: 10, plankY: 100, expectedResult: false },
+    { ballRadius: 10, plankWidth: 150, plankHeight: 20,  ballX: 190, ballY: 320, plankX: 10, plankY: 300, expectedResult: false },
+    { ballRadius: 10, plankWidth: 150, plankHeight: 20,  ballX: 130, ballY: 310, plankX: 10, plankY: 300, expectedResult: true },
 ];
 
 test.each(positions)(
-    'Test collision with Ball at (%i, %i) and Plank at (%i, %i)',
-    (ballX, ballY, plankX, plankY, expected) => {
-        const game = new Game();
-        const ball = new Ball();
-        const plank = new Plank();
+    'Test collision between ball and plank',
+    ({ ballRadius, plankWidth, ballX, ballY, plankX, plankY, expectedResult }) => {
+        const game = new Game(ctx);
+        const ball = new Ball(ballRadius, CANVAS_WIDTH, CANVAS_HEIGHT);
+        const plank = new Plank(plankWidth, plankHeight);
 
         // Set custom positions for ball and plank
         ball.x = ballX;
@@ -31,8 +34,8 @@ test.each(positions)(
 
         // Test collision
         const result = game.collision(plank, ball);
-        
+
         // Assertion
-        expect(result).toBe(expected);
+        expect(result).toBe(expectedResult);
     }
 );
