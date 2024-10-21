@@ -14,59 +14,26 @@ class Ball {
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
         ctx.fill();
     }
-
-    motion(map, plank) {
-        // Top wall collision
-        if (this.y + this.dy - this.radius < 0) { 
-            this.dy = -this.dy;
-        }
-
-        // Block collision
-        for (let blockNumber = 0; blockNumber < map.blocks.length; blockNumber++) {
-            let dyChanged = false;
-            if (game.collision(map.blocks[blockNumber], this)) {
-                if (!dyChanged)
-                    this.dy = -this.dy;
-
-                map.blocks.splice(blockNumber,1);
-                game.score += 1;
-            }
-        }
-
-        // Plank
-        if (game.collision(plank, this) && this.dy > 0) {
-            this.dy = -this.dy
-            this.dx = (this.x - (plank.x + plank.width/2))* 0.04;
-        }
-
-        // Sides walls
-        if (this.x + this.dx + this.radius > canvas.width || this.x + this.dx - this.radius < 0) {
-            this.dx = -this.dx;
-        }
-
-        this.x += this.dx;
-        this.y += this.dy;
-    }
 }
 
 class Plank {
     constructor(width, height, x, y) {
-        this.width = width, //100,
-        this.height = height,// 20,
-        this.x = x, //canvas.width / 2 - this.width / 2;
-        this.y = y, //canvas.height - this.height;
+        this.width = width, 
+        this.height = height,
+        this.x = x,
+        this.y = y,
         this.vx = 0;
         this.moving = false;
         this.start;
-
+        
     }
 
     draw(ctx, canvasHeight) {
         ctx.fillRect(this.x, canvasHeight - this.height, this.width, this.height);
     }
 
-    move(elapsed) {
-        this.x = clamp(this.x + elapsed * this.vx * 0.7, 0, canvas.width - this.width);
+    move(elapsed, canvasWidth) {
+        this.x = clamp(this.x + elapsed * this.vx * 0.7, 0, canvasWidth - this.width);
     }
 
     startMotion(direction) {
@@ -135,10 +102,21 @@ class Game {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
 
-        this.plank = new Plank(150, 20, canvas.width / 2 - 150 / 2, canvas.height - 20);
-        this.ball = new Ball(5, canvas.width / 2, canvas.height / 2, 0, 9);
         this.map = new Map(canvas.width);
+
+        let ballRadius = 5;
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height / 2;
+        let ballDx = 0;
+        let ballDy = 9;
+        this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
         
+        let plankWidth = 150;
+        let plankHeight = 20;
+        let plankX = canvas.width / 2 - plankWidth / 2;
+        let plankY = canvas.height - 20;
+        this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
+
         this.score = 0;
         this.gameOver = false;
     }
@@ -147,18 +125,52 @@ class Game {
         if (this.ball.y + this.ball.radius < this.plank.y + Math.abs(this.ball.dy)) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            this.ball.motion(this.map, this.plank);
+            this.motion(this.map, this.plank);
 
             this.map.draw(this.ctx);
             this.ball.draw(this.ctx);
             this.plank.draw(this.ctx, this.canvas.height);
 
         } else {
-            game.gameOver = true;
+            this.gameOver = true;
         }
 
         const score = document.getElementById("score");
-        score.innerText = game.score;
+        score.innerText = this.score;
+    }
+
+
+    motion() {
+        // Top wall collision
+        if (this.ball.y + this.ball.dy - this.ball.radius < 0) { 
+            this.ball.dy = -this.ball.dy;
+        }
+
+        // Block collision
+        for (let blockNumber = 0; blockNumber < this.map.blocks.length; blockNumber++) {
+            let dyChanged = false;
+            if (this.collision(this.map.blocks[blockNumber], this.ball)) {
+                if (!dyChanged)
+                    this.ball.dy = -this.ball.dy;
+
+                this.map.blocks.splice(blockNumber,1);
+                this.score += 1;
+            }
+        }
+
+        // Plank
+        if (this.collision(this.plank, this.ball) && this.ball.dy > 0) {
+            this.ball.dy = -this.ball.dy
+            this.ball.dx = (this.ball.x - (this.plank.x + this.plank.width/2))* 0.04;
+        }
+
+        // Sides walls
+        if (this.ball.x + this.ball.dx + this.ball.radius > this.canvas.width || this.ball.x + this.ball.dx - this.ball.radius < 0) {
+            this.ball.dx = -this.ball.dx;
+        }
+
+        this.ball.x += this.ball.dx;
+        this.ball.y += this.ball.dy;
     }
 
     collision(rectangle, circle) {
@@ -179,7 +191,7 @@ class Game {
                 this.lastTimestamp = timestamp;
             }
             const elapsed = timestamp - this.lastTimestamp;
-            this.plank.move(elapsed);
+            this.plank.move(elapsed, this.canvas.width);
             this.lastTimestamp = timestamp;
 
             requestAnimationFrame(this.updatePlank.bind(this));
@@ -200,18 +212,19 @@ class Game {
             this.plank.stopMotion();
         }  
     }
-
 }
 
-// Boucle principale
-var canvas = document.getElementById("arkanoid");
-var game = new Game(canvas);
+document.addEventListener("DOMContentLoaded", () => {
+    // Boucle principale
+    var canvas = document.getElementById("arkanoid");
+    var game = new Game(canvas);
+    
+    setInterval(game.render, 17)
+    
+    //Plank mouvements
+    addEventListener("keydown", game.handleKeyDown.bind(game));
+    addEventListener("keyup", game.handleKeyUp.bind(game));
+});
 
-setInterval(game.render, 17)
-
-//Plank mouvements
-addEventListener("keydown", game.handleKeyDown.bind(game));
-addEventListener("keyup", game.handleKeyUp.bind(game));
-
-// Export for test
+// // Export for test
 export { Game, Plank, Ball };
