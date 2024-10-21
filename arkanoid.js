@@ -1,15 +1,15 @@
 import { clamp } from "./helpers.js";
 
 class Ball {
-    constructor() {
-        this.radius = 5,
-        this.x = canvas.width / 2,
-        this.y = canvas.height / 2,
-        this.dx = 0,
-        this.dy = 9
+    constructor(radius, x, y, dx, dy) {
+        this.radius = radius;
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
     }
 
-    draw() {
+    draw(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
         ctx.fill();
@@ -24,7 +24,7 @@ class Ball {
         // Block collision
         for (let blockNumber = 0; blockNumber < map.blocks.length; blockNumber++) {
             let dyChanged = false;
-            if (game.collision(map.blocks[blockNumber], this) && this.dy < 0) {
+            if (game.collision(map.blocks[blockNumber], this)) {
                 if (!dyChanged)
                     this.dy = -this.dy;
 
@@ -50,19 +50,19 @@ class Ball {
 }
 
 class Plank {
-    constructor() {
-        this.width = 100,
-            this.height = 20,
-            this.x = canvas.width / 2 - this.width / 2;
-        this.y = canvas.height - this.height;
+    constructor(width, height, x, y) {
+        this.width = width, //100,
+        this.height = height,// 20,
+        this.x = x, //canvas.width / 2 - this.width / 2;
+        this.y = y, //canvas.height - this.height;
         this.vx = 0;
         this.moving = false;
         this.start;
 
     }
 
-    draw() {
-        ctx.fillRect(this.x, canvas.height - this.height, this.width, this.height);
+    draw(ctx, canvasHeight) {
+        ctx.fillRect(this.x, canvasHeight - this.height, this.width, this.height);
     }
 
     move(elapsed) {
@@ -95,14 +95,14 @@ class Block {
         this.height = height
     }
 
-    draw() {
+    draw(ctx) {
         ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
 }
 
 
 class Map {    
-    constructor() {
+    constructor(canvasWidth) {
         this.blocks = [];
         this.map = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -114,7 +114,7 @@ class Map {
         ]
 
         for (let lineNumber = 0; lineNumber < this.map.length; lineNumber++) {
-            let width = canvas.width / this.map[lineNumber].length;
+            let width = canvasWidth / this.map[lineNumber].length;
             let height = 20;
             for (let columnNumber = 0; columnNumber < this.map[lineNumber].length; columnNumber++) {
                 if (this.map[lineNumber][columnNumber] == 1)
@@ -123,18 +123,21 @@ class Map {
         }
     }
 
-    draw() {
+    draw(ctx) {
         for (let block of this.blocks) {
-            block.draw();
+            block.draw(ctx);
         }
     }
 }
 
 class Game {
-    constructor() { 
-        this.plank = new Plank();
-        this.ball = new Ball();
-        this.map = new Map();
+    constructor(canvas) { 
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+
+        this.plank = new Plank(150, 20, canvas.width / 2 - 150 / 2, canvas.height - 20);
+        this.ball = new Ball(5, canvas.width / 2, canvas.height / 2, 0, 9);
+        this.map = new Map(canvas.width);
         
         this.score = 0;
         this.gameOver = false;
@@ -142,13 +145,13 @@ class Game {
     
     render = () => { // Arrow function pour utilsé l'object englobant en tant que "this"
         if (this.ball.y + this.ball.radius < this.plank.y + Math.abs(this.ball.dy)) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             this.ball.motion(this.map, this.plank);
 
-            this.map.draw();
-            this.ball.draw();
-            this.plank.draw();
+            this.map.draw(this.ctx);
+            this.ball.draw(this.ctx);
+            this.plank.draw(this.ctx, this.canvas.height);
 
         } else {
             game.gameOver = true;
@@ -202,8 +205,7 @@ class Game {
 
 // Boucle principale
 var canvas = document.getElementById("arkanoid");
-var ctx = canvas.getContext('2d');
-var game = new Game();
+var game = new Game(canvas);
 
 setInterval(game.render, 17)
 

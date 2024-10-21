@@ -4,4 +4,5 @@ export default {
   },
   // extensionsToTreatAsEsm: ['.js'],
   testEnvironment: 'jest-environment-jsdom',
+  setupFilesAfterEnv: ['jest-canvas-mock'],
 };
