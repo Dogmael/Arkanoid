@@ -117,7 +117,7 @@ class Game {
 		this.gameOver = false;
 	}
 
-	render = () => { // Arrow function pour utilsé l'object englobant en tant que "this"
+	render () { // Regular function to use the enclosing object as "this"
 		if (this.ball.y + this.ball.radius < this.plank.y + Math.abs(this.ball.dy)) {
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -132,7 +132,7 @@ class Game {
 
 		const score = document.getElementById('score');
 		score.innerText = this.score;
-	};
+	}
 
 	motion () {
 		// Top wall collision
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const canvas = document.getElementById('arkanoid');
 	const game = new Game(canvas);
 
-	setInterval(game.render, 17);
+	setInterval(game.render.bind(game), 17);
 
 	// Plank mouvements
 	addEventListener('keydown', game.handleKeyDown.bind(game));
