@@ -1,0 +1,21 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "jest": true
+    },
+    "extends": [
+        "standard"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent" : ["error", "tab"],
+        "no-tabs" : "off",
+        "semi": [2, "always"]
+    },
+    "globals": {
+    }
+}
