@@ -100,25 +100,33 @@ class Game {
 
 		this.map = new Map(canvas.width);
 
-		const ballRadius = 5;
-		const ballX = canvas.width / 2;
-		const ballY = canvas.height / 2;
-		const ballDx = 0;
-		const ballDy = 9;
-		this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
-
 		const plankWidth = 150;
 		const plankHeight = 20;
 		const plankX = canvas.width / 2 - plankWidth / 2;
 		const plankY = canvas.height - 20;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
+		const ballRadius = 5;
+		const ballX = canvas.width / 2;
+		const ballY = canvas.height - plankHeight - ballRadius;
+		const ballDx = 0;
+		const ballDy = 0;
+		this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
+
+		this.gameInProgress = false;
 		this.score = 0;
-		this.gameOver = false;
 	}
 
-	render () { // Regular function to use the enclosing object as "this"
-		if (this.ball.y + this.ball.radius < this.plank.y + Math.abs(this.ball.dy)) {
+	start () {
+		if (!this.gameInProgress) {
+			this.ball.dx = Math.random() * 3;
+			this.ball.dy = -Math.sqrt(81 - this.ball.dx ** 2);
+			this.gameInProgress = true;
+		}
+	}
+
+	render () {
+		if (this.ball.y + this.ball.radius <= this.plank.y) {
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 			this.motion(this.map, this.plank);
@@ -127,7 +135,7 @@ class Game {
 			this.ball.draw(this.ctx);
 			this.plank.draw(this.ctx, this.canvas.height);
 		} else {
-			this.gameOver = true;
+			this.gameInProgress = false;
 		}
 
 		const score = document.getElementById('score');
@@ -191,9 +199,13 @@ class Game {
 	}
 
 	handleKeyDown (event) {
-		if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+		if (this.gameInProgress && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
 			this.plank.startMotion(event.key === 'ArrowRight' ? 'right' : 'left');
 			requestAnimationFrame(this.updatePlank.bind(this));
+		}
+
+		if (event.key === 'ArrowUp') {
+			this.start();
 		}
 	}
 
