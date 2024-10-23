@@ -31,7 +31,7 @@ class Plank {
 	}
 
 	move (elapsed, canvasWidth) {
-		this.x = clamp(this.x + elapsed * this.vx * 0.7, 0, canvasWidth - this.width);
+		this.x = clamp(this.x + elapsed * this.vx * 0.9, 0, canvasWidth - this.width);
 	}
 
 	startMotion (direction) {
@@ -106,7 +106,7 @@ class Game {
 		const plankY = canvas.height - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		const ballRadius = plankHeight / 4;
+		const ballRadius = plankHeight / 3;
 		const ballX = canvas.width / 2;
 		const ballY = canvas.height - plankHeight - ballRadius;
 		const ballDx = 0;
@@ -119,7 +119,7 @@ class Game {
 	start () {
 		if (!this.gameInProgress) {
 			this.ball.dx = Math.random() * 3;
-			this.ball.dy = -Math.sqrt(81 - this.ball.dx ** 2);
+			this.ball.dy = -Math.sqrt(300 - this.ball.dx ** 2);
 			this.gameInProgress = true;
 		}
 	}
