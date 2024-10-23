@@ -114,7 +114,6 @@ class Game {
 		this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
 
 		this.gameInProgress = false;
-		this.score = 0;
 	}
 
 	start () {
@@ -137,9 +136,6 @@ class Game {
 		} else {
 			this.gameInProgress = false;
 		}
-
-		const score = document.getElementById('score');
-		score.innerText = this.score;
 	}
 
 	motion () {
@@ -155,7 +151,6 @@ class Game {
 				if (!dyChanged) { this.ball.dy = -this.ball.dy; }
 
 				this.map.blocks.splice(blockNumber, 1);
-				this.score += 1;
 			}
 		}
 
@@ -219,6 +214,8 @@ class Game {
 document.addEventListener('DOMContentLoaded', () => {
 	// Boucle principale
 	const canvas = document.getElementById('arkanoid');
+	canvas.width = window.innerWidth * 0.5;
+	canvas.height = window.innerHeight * 0.95;
 	const game = new Game(canvas);
 
 	setInterval(game.render.bind(game), 17);

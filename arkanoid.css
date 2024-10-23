@@ -1,4 +1,15 @@
+html, body {
+    height: 100%;
+    display: flex;
+    justify-content: center; /* Centrage horizontal */
+    align-items: center; /* Centrage vertical */
+}
+
 #arkanoid {
     background-color: lightgray;
     border : black 2px solid;
+    display: block;
+    margin: auto; 
+    height: 90%;
+    
 }
