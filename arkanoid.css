@@ -10,7 +10,7 @@ html, body {
     border : black 2px solid;
     display: block;
     max-height: 90vh; /* Hauteur automatique en fonction du ratio */
-    aspect-ratio: 500 / 700; /* Ratio largeur / hauteur pour conserver les proportions */
+    aspect-ratio: 1 / 1; /* Ratio largeur / hauteur pour conserver les proportions : doit être le même que celui du canvas défini dans le js */
     max-width: 90vw; 
     box-sizing: border-box; /* Inclure la bordure dans les dimensions */
 }

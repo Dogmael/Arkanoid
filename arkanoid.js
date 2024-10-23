@@ -66,7 +66,7 @@ class Block {
 }
 
 class Map {
-	constructor (canvasWidth) {
+	constructor (canvasWidth, canvasHeight) {
 		this.blocks = [];
 		this.map = [
 			[0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -79,7 +79,7 @@ class Map {
 
 		for (let lineNumber = 0; lineNumber < this.map.length; lineNumber++) {
 			const width = canvasWidth / this.map[lineNumber].length;
-			const height = 20;
+			const height = Math.round(canvasHeight / 20);
 			for (let columnNumber = 0; columnNumber < this.map[lineNumber].length; columnNumber++) {
 				if (this.map[lineNumber][columnNumber] === 1) { this.blocks.push(new Block(columnNumber * width, lineNumber * height, width, height)); }
 			}
@@ -98,15 +98,15 @@ class Game {
 		this.canvas = canvas;
 		this.ctx = canvas.getContext('2d');
 
-		this.map = new Map(canvas.width);
+		this.map = new Map(canvas.width, canvas.height);
 
-		const plankWidth = 150;
-		const plankHeight = 20;
+		const plankWidth = canvas.width / 5; // 150;
+		const plankHeight = canvas.height / 50; // 20;
 		const plankX = canvas.width / 2 - plankWidth / 2;
-		const plankY = canvas.height - 20;
+		const plankY = canvas.height - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		const ballRadius = 5;
+		const ballRadius = plankHeight / 4;
 		const ballX = canvas.width / 2;
 		const ballY = canvas.height - plankHeight - ballRadius;
 		const ballDx = 0;
@@ -220,8 +220,6 @@ class Game {
 document.addEventListener('DOMContentLoaded', () => {
 	// Boucle principale
 	const canvas = document.getElementById('arkanoid');
-	canvas.width = window.innerWidth * 0.4;
-	canvas.height = window.innerHeight * 0.95;
 	const game = new Game(canvas);
 
 	setInterval(game.render.bind(game), 17);
