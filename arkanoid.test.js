@@ -23,10 +23,8 @@ test.each(positions)(
 		const ball = new Ball(ballRadius, ballX, ballY, 0, 0);
 		const plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		// Test collision
 		const result = game.collision(plank, ball);
 
-		// Assertion
 		expect(result).toBe(expectedResult);
 	}
 );
