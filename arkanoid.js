@@ -185,6 +185,12 @@ class Game {
 			}
 			const elapsed = timestamp - this.lastTimestamp;
 			this.plank.move(elapsed, this.canvas.width);
+
+			// Stick ball to plank before game start
+			if (!this.gameInProgress) {
+				this.ball.x = this.plank.x + this.plank.width / 2;
+			}
+
 			this.lastTimestamp = timestamp;
 
 			requestAnimationFrame(this.updatePlank.bind(this));
@@ -194,7 +200,7 @@ class Game {
 	}
 
 	handleKeyDown (event) {
-		if (this.gameInProgress && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
+		if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
 			this.plank.startMotion(event.key === 'ArrowRight' ? 'right' : 'left');
 			requestAnimationFrame(this.updatePlank.bind(this));
 		}
@@ -214,7 +220,7 @@ class Game {
 document.addEventListener('DOMContentLoaded', () => {
 	// Boucle principale
 	const canvas = document.getElementById('arkanoid');
-	canvas.width = window.innerWidth * 0.5;
+	canvas.width = window.innerWidth * 0.4;
 	canvas.height = window.innerHeight * 0.95;
 	const game = new Game(canvas);
 

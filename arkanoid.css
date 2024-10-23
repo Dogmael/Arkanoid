@@ -9,7 +9,8 @@ html, body {
     background-color: lightgray;
     border : black 2px solid;
     display: block;
-    margin: auto; 
-    height: 90%;
-    
+    max-height: 90vh; /* Hauteur automatique en fonction du ratio */
+    aspect-ratio: 500 / 700; /* Ratio largeur / hauteur pour conserver les proportions */
+    max-width: 90vw; 
+    box-sizing: border-box; /* Inclure la bordure dans les dimensions */
 }
