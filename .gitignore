@@ -1,0 +1,8 @@
+# Dépendances Node.js
+node_modules/
+
+# Dossiers de build
+dist/
+
+# Information de préférence pour le Finder MacOS
+.DS_Store
