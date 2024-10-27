@@ -13,7 +13,14 @@ class Ball {
 	draw (ctx) {
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
+		ctx.fillStyle = 'black';
 		ctx.fill();
+		ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+		ctx.shadowBlur = 10;
+		ctx.shadowOffsetX = -this.dx / 30;
+		ctx.shadowOffsetY = -this.dy / 30;
+		ctx.fill();
+		ctx.shadowColor = 'transparent'; // Reset shadow
 	}
 }
 
@@ -107,7 +114,7 @@ class Game {
 		const plankY = canvas.height - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		const ballRadius = plankHeight / 3;
+		const ballRadius = plankHeight;
 		const ballX = canvas.width / 2;
 		const ballY = canvas.height - plankHeight - ballRadius;
 		const ballDx = 0;
@@ -223,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const canvas = document.getElementById('arkanoid');
 	const game = new Game(canvas);
 
-	setInterval(game.render.bind(game), 17);
+	setInterval(game.render.bind(game), (1000 / 60)); // 60 FPS
 
 	// Plank mouvements
 	addEventListener('keydown', game.handleKeyDown.bind(game));
