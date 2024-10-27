@@ -11,6 +11,8 @@ class Ball {
 	}
 
 	draw (ctx) {
+		console.log('ball x, y', this.x, this.y);
+
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
 		ctx.fillStyle = 'black';
