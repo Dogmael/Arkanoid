@@ -32,7 +32,9 @@ export default {
 		minimizer: [
 			new TerserPlugin({
 				terserOptions: {
-					compress: {}
+					compress: {
+						unsafe: false
+					}
 				}
 			})
 		]
