@@ -1,5 +1,4 @@
 import { clamp } from './helpers.js';
-import './arkanoid.css'; // Pour que Webpack charge le fichier CSS
 
 class Ball {
 	constructor (radius, x, y, dx, dy) {

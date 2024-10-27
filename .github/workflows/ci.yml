@@ -31,6 +31,9 @@ jobs:
       - name: Run Jest tests
         run: npm test
 
+      - name: move .html and .css files to dist
+        run: mv src/*.html src/*.css dist/
+
       - name: Build with Webpack
         run: npm run build
 

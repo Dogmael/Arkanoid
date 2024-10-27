@@ -1,8 +1,8 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import TerserPlugin from 'terser-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+// import HtmlWebpackPlugin from 'html-webpack-plugin';
+// import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,10 +22,10 @@ export default {
 			// 		loader: 'babel-loader'
 			// 	}
 			// },
-			{
-				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, 'css-loader']
-			}
+			// {
+			// 	test: /\.css$/,
+			// 	use: [MiniCssExtractPlugin.loader, 'css-loader']
+			// }
 		]
 	},
 	optimization: {
@@ -39,15 +39,15 @@ export default {
 			})
 		]
 	},
-	plugins: [
-		new HtmlWebpackPlugin({
-			template: './src/arkanoid.html',
-			filename: 'arkanoid.html'
-		}),
-		new MiniCssExtractPlugin({
-			filename: 'arkanoid.css' // Nom du fichier CSS dans `dist`
-		})
-	],
+	// plugins: [
+	// 	// new HtmlWebpackPlugin({
+	// 	// 	template: './src/arkanoid.html',
+	// 	// 	filename: 'arkanoid.html'
+	// 	// }),
+	// 	// new MiniCssExtractPlugin({
+	// 	// 	filename: 'arkanoid.css' // Nom du fichier CSS dans `dist`
+	// 	// })
+	// ],
 	resolve: {
 		extensions: ['.js']
 	}
