@@ -1,4 +1,14 @@
 import { clamp } from './helpers.js';
+import levels from './assets/json/levels.json' with { type: 'json' };
+class Level {
+	constructor ({ levelNumber, ballSpeed, paddleWidthRation, paddleHeightRation, map }) {
+		this.levelNumber = levelNumber;
+		this.ballSpeed = ballSpeed;
+		this.paddleWidthRation = paddleWidthRation;
+		this.paddleHeightRation = paddleHeightRation;
+		this.map = map;
+	}
+}
 
 class Ball {
 	constructor (radius, x, y, dx, dy) {
@@ -10,8 +20,6 @@ class Ball {
 	}
 
 	draw (ctx) {
-		console.log('ball x, y', this.x, this.y);
-
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
 		ctx.fillStyle = 'black';
@@ -75,22 +83,15 @@ class Block {
 }
 
 class Map {
-	constructor (canvasWidth, canvasHeight) {
+	constructor (canvasWidth, canvasHeight, mapTemplate) {
 		this.blocks = [];
-		this.map = [
-			[0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[1, 1, 1, 1, 1, 1, 1, 1, 1],
-			[1, 1, 1, 1, 1, 1, 1, 1, 1],
-			[1, 1, 1, 1, 1, 1, 1, 1, 1],
-			[1, 1, 1, 1, 1, 1, 1, 1, 1]
-		];
+		this.mapTemplate = mapTemplate;
 
-		for (let lineNumber = 0; lineNumber < this.map.length; lineNumber++) {
-			const width = canvasWidth / this.map[lineNumber].length;
+		for (let lineNumber = 0; lineNumber < this.mapTemplate.length; lineNumber++) {
+			const width = canvasWidth / this.mapTemplate[lineNumber].length;
 			const height = Math.round(canvasHeight / 20);
-			for (let columnNumber = 0; columnNumber < this.map[lineNumber].length; columnNumber++) {
-				if (this.map[lineNumber][columnNumber] === 1) { this.blocks.push(new Block(columnNumber * width, lineNumber * height, width, height)); }
+			for (let columnNumber = 0; columnNumber < this.mapTemplate[lineNumber].length; columnNumber++) {
+				if (this.mapTemplate[lineNumber][columnNumber] === 1) { this.blocks.push(new Block(columnNumber * width, lineNumber * height, width, height)); }
 			}
 		}
 	}
@@ -107,17 +108,29 @@ class Game {
 		this.canvas = canvas;
 		this.ctx = canvas.getContext('2d');
 
-		this.map = new Map(canvas.width, canvas.height);
+		this.map = null;
+		this.plank = null;
+		this.ball = null;
 
-		const plankWidth = canvas.width / 5; // 150;
-		const plankHeight = canvas.height / 50; // 20;
-		const plankX = canvas.width / 2 - plankWidth / 2;
-		const plankY = canvas.height - plankHeight;
+		this.level = { levelNumber: 0 };
+
+		this.initGame();
+	}
+
+	initGame () {
+		this.initNextLevel(this.level.levelNumber);
+
+		this.map = new Map(this.canvas.width, this.canvas.height, this.level.map);
+
+		const plankWidth = this.canvas.width * this.level.paddleWidthRation;
+		const plankHeight = this.canvas.height * this.level.paddleHeightRation;
+		const plankX = this.canvas.width / 2 - plankWidth / 2;
+		const plankY = this.canvas.height - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
 		const ballRadius = plankHeight;
-		const ballX = canvas.width / 2;
-		const ballY = canvas.height - plankHeight - ballRadius;
+		const ballX = this.canvas.width / 2;
+		const ballY = this.canvas.height - plankHeight - ballRadius;
 		const ballDx = 0;
 		const ballDy = 0;
 		this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
@@ -125,10 +138,15 @@ class Game {
 		this.gameInProgress = false;
 	}
 
+	initNextLevel (currentLevelNumber) {
+		const nextLevelName = 'lv' + (currentLevelNumber + 1);
+		this.level = new Level(levels[nextLevelName]);
+	}
+
 	start () {
 		if (!this.gameInProgress) {
 			this.ball.dx = Math.random() * 3;
-			this.ball.dy = -Math.sqrt(300 - this.ball.dx ** 2);
+			this.ball.dy = -Math.sqrt(this.level.ballSpeed - this.ball.dx ** 2);
 			this.gameInProgress = true;
 		}
 	}

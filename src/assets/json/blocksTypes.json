@@ -1,0 +1,12 @@
+{
+    "1" : {
+        "color": "blue",
+        "hardness": 1,
+        "points": 1
+    },
+    "2" : {
+        "color": "green",
+        "hardness": 2,
+        "points": 2
+    }
+}

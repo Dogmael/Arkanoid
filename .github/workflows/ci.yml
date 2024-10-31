@@ -1,4 +1,4 @@
-name: Lint and Test
+name: Lint, Test, Build, and Deploy
 
 on: 
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   lint-test-build-deploy:
-    name: Lint with ESlint, Test with Jest, Build with Webpack, and Deploy with GitHub Pages
+    name: Lint with ESLint, Test with Jest, Build with Webpack, and Deploy with GitHub Pages
     runs-on: ubuntu-latest
 
     permissions:
@@ -27,15 +27,23 @@ jobs:
 
       - name: Run ESLint without autofix
         run: npx eslint@8.0.1 .
-      
+
       - name: Run Jest tests
         run: npm test
-        
+
       - name: Build with Webpack
         run: npm run build
       
-      - name: move .html and .css files to dist
-        run: mv src/*.html src/*.css dist/
+      - name: Move HTML and CSS files to dist
+        run: |
+          mkdir -p dist
+          mv src/*.html dist/
+          mv src/*.css dist/
+
+      - name: Move assets folder to dist
+        run: |
+          mkdir -p dist/assets
+          mv src/assets/* dist/assets/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
