@@ -1,5 +1,6 @@
 import { clamp } from './helpers.js';
 import levels from './assets/json/levels.json' with { type: 'json' };
+import blocksTypes from './assets/json/blocksTypes.json' with {type: 'json'};
 class Level {
 	constructor ({ levelNumber, ballSpeed, paddleWidthRation, paddleHeightRation, map }) {
 		this.levelNumber = levelNumber;
@@ -17,13 +18,16 @@ class Ball {
 		this.y = y;
 		this.dx = dx;
 		this.dy = dy;
+		this.color = '#12AAFEff';
+
+		this.ballImg = new Image();
+		this.ballImg.src = './assets/images/ball.png';
 	}
 
 	draw (ctx) {
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
-		ctx.fillStyle = 'black';
-		ctx.fill();
+		ctx.drawImage(this.ballImg, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+
+		// Shadow
 		ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
 		ctx.shadowBlur = 10;
 		ctx.shadowOffsetX = -this.dx / 30;
@@ -41,10 +45,17 @@ class Plank {
 		this.y = y;
 		this.vx = 0;
 		this.moving = false;
+		this.color = 'black';
+
+		this.plankImg = new Image();
+		this.plankImg.src = './assets/images/plank.png';
+		this.plankImg.onload = () => {
+			this.plankLoaded = true;
+		};
 	}
 
 	draw (ctx, canvasHeight) {
-		ctx.fillRect(this.x, canvasHeight - this.height, this.width, this.height);
+		ctx.drawImage(this.plankImg, this.x, canvasHeight - this.height, this.width, this.height);
 	}
 
 	move (elapsed, canvasWidth) {
@@ -60,38 +71,46 @@ class Plank {
 		this.moving = false;
 		this.vx = 0;
 	}
-
-	// Getters
-	getX () { return this.x; }
-	getY () { return this.y; }
-	getWidth () { return this.width; }
-	getHeight () { return this.height; }
-	isMoving () { return this.moving; }
 }
 
 class Block {
-	constructor (x, y, width, height) {
+	constructor (x, y, width, height, color, hardness, point) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.color = color;
+		this.hardness = hardness;
+		this.point = point;
 	}
 
 	draw (ctx) {
-		ctx.strokeRect(this.x, this.y, this.width, this.height);
+		ctx.beginPath();
+		ctx.fillStyle = 'black';
+		ctx.rect(this.x, this.y, this.width, this.height);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.fillStyle = this.color;
+		ctx.rect(this.x + 2, this.y + 2, this.width - 4, this.height - 4);
+		ctx.fill();
 	}
 }
 
 class Map {
-	constructor (canvasWidth, canvasHeight, mapTemplate) {
+	constructor (canvasWidth, canvasHeight, sideMaring, topMaring, mapTemplate) {
 		this.blocks = [];
 		this.mapTemplate = mapTemplate;
 
 		for (let lineNumber = 0; lineNumber < this.mapTemplate.length; lineNumber++) {
-			const width = canvasWidth / this.mapTemplate[lineNumber].length;
-			const height = Math.round(canvasHeight / 20);
+			const width = (canvasWidth - 2 * sideMaring) / this.mapTemplate[lineNumber].length;
+			const height = (canvasHeight - topMaring) / 20;
+
 			for (let columnNumber = 0; columnNumber < this.mapTemplate[lineNumber].length; columnNumber++) {
-				if (this.mapTemplate[lineNumber][columnNumber] === 1) { this.blocks.push(new Block(columnNumber * width, lineNumber * height, width, height)); }
+				if (this.mapTemplate[lineNumber][columnNumber] !== 0) {
+					const blockType = blocksTypes[this.mapTemplate[lineNumber][columnNumber]];
+
+					this.blocks.push(new Block(sideMaring + columnNumber * width, topMaring + lineNumber * height, width, height, blockType.color, blockType.hardness, blockType.points));
+				}
 			}
 		}
 	}
@@ -107,6 +126,16 @@ class Game {
 	constructor (canvas) {
 		this.canvas = canvas;
 		this.ctx = canvas.getContext('2d');
+		this.ctx.imageSmoothingEnabled = false;
+
+		this.backgroundImg = new Image();
+		this.backgroundImg.src = './assets/images/backgrounds/background4.png';
+		this.backgroundImg.onload = () => {
+			this.backgroundLoaded = true;
+		};
+
+		this.topMaring = 40;
+		this.sideMaring = 40;
 
 		this.map = null;
 		this.plank = null;
@@ -115,12 +144,15 @@ class Game {
 		this.level = { levelNumber: 0 };
 
 		this.initGame();
+
+		this.blockImpactSound = new Audio('./assets/sonds/blockImpact.wav');
+		this.plankImpactSound = new Audio('./assets/sonds/plankImpact.wav');
 	}
 
 	initGame () {
 		this.initNextLevel(this.level.levelNumber);
 
-		this.map = new Map(this.canvas.width, this.canvas.height, this.level.map);
+		this.map = new Map(this.canvas.width, this.canvas.height, this.sideMaring, this.topMaring, this.level.map);
 
 		const plankWidth = this.canvas.width * this.level.paddleWidthRation;
 		const plankHeight = this.canvas.height * this.level.paddleHeightRation;
@@ -128,7 +160,7 @@ class Game {
 		const plankY = this.canvas.height - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		const ballRadius = plankHeight;
+		const ballRadius = plankHeight / 3;
 		const ballX = this.canvas.width / 2;
 		const ballY = this.canvas.height - plankHeight - ballRadius;
 		const ballDx = 0;
@@ -136,6 +168,7 @@ class Game {
 		this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
 
 		this.gameInProgress = false;
+		this.loose = false;
 	}
 
 	initNextLevel (currentLevelNumber) {
@@ -155,19 +188,31 @@ class Game {
 		if (this.ball.y + this.ball.radius <= this.plank.y) {
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+			if (this.backgroundLoaded) {
+				this.ctx.drawImage(this.backgroundImg, 0, 0, this.canvas.width, this.canvas.height);
+			}
+
 			this.motion(this.map, this.plank);
 
 			this.map.draw(this.ctx);
 			this.ball.draw(this.ctx);
 			this.plank.draw(this.ctx, this.canvas.height);
-		} else {
+		} else { // Loose
 			this.gameInProgress = false;
+
+			if (!this.loose) {
+				this.loose = true;
+
+				// Play loose sound
+				const looseSound = new Audio('./assets/sonds/loose.wav');
+				looseSound.play();
+			}
 		}
 	}
 
 	motion () {
 		// Top wall collision
-		if (this.ball.y + this.ball.dy - this.ball.radius < 0) {
+		if (this.ball.y + this.ball.dy - this.ball.radius - this.topMaring < 0) {
 			this.ball.dy = -this.ball.dy;
 		}
 
@@ -178,6 +223,9 @@ class Game {
 				if (!dyChanged) { this.ball.dy = -this.ball.dy; }
 
 				this.map.blocks.splice(blockNumber, 1);
+
+				this.blockImpactSound.currentTime = 0;
+				this.blockImpactSound.play();
 			}
 		}
 
@@ -185,10 +233,13 @@ class Game {
 		if (this.collision(this.plank, this.ball) && this.ball.dy > 0) {
 			this.ball.dy = -this.ball.dy;
 			this.ball.dx = (this.ball.x - (this.plank.x + this.plank.width / 2)) * 0.04;
+
+			this.plankImpactSound.currentTime = 0;
+			this.plankImpactSound.play();
 		}
 
 		// Sides walls
-		if (this.ball.x + this.ball.dx + this.ball.radius > this.canvas.width || this.ball.x + this.ball.dx - this.ball.radius < 0) {
+		if (this.ball.x + this.ball.dx + this.ball.radius + this.sideMaring > this.canvas.width || this.ball.x + this.ball.dx - this.ball.radius - this.sideMaring < 0) {
 			this.ball.dx = -this.ball.dx;
 		}
 
@@ -206,7 +257,7 @@ class Game {
 	}
 
 	updatePlank (timestamp) {
-		if (this.plank.isMoving()) {
+		if (this.plank.moving) {
 			if (!this.lastTimestamp) {
 				this.lastTimestamp = timestamp;
 			}
@@ -245,6 +296,10 @@ class Game {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+	// Play newGame sound
+	const newGameSound = new Audio('./assets/sonds/newGame.wav');
+	newGameSound.play();
+
 	// Boucle principale
 	const canvas = document.getElementById('arkanoid');
 	const game = new Game(canvas);

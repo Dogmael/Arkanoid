@@ -1,11 +1,11 @@
 {
     "1" : {
-        "color": "blue",
+        "color": "#EBDC30ff",
         "hardness": 1,
         "points": 1
     },
     "2" : {
-        "color": "green",
+        "color": "#FB6FF9ff",
         "hardness": 2,
         "points": 2
     }

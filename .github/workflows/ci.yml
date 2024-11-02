@@ -40,10 +40,10 @@ jobs:
           mv src/*.html dist/
           mv src/*.css dist/
 
-      - name: Move assets folder to dist
+      - name: Sync assets folder to dist using rsync
         run: |
           mkdir -p dist/assets
-          mv src/assets/* dist/assets/
+          rsync -av src/assets/ dist/assets/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
