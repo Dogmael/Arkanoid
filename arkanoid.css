@@ -1,13 +1,20 @@
+/* 
+    -black: #000000ff;
+    -picton-blue: #12AAFEff;
+    -citrine: #EBDC30ff;
+    -red-cmyk: #FF102Aff;
+    -ultra-pink: #FB6FF9ff; 
+*/
+
 html, body {
     height: 100%;
     display: flex;
     justify-content: center; /* Centrage horizontal */
     align-items: center; /* Centrage vertical */
+    background-color: black;
 }
 
 #arkanoid {
-    background-color: lightgray;
-    border : black 2px solid;
     display: block;
     max-height: 90vh; /* Hauteur automatique en fonction du ratio */
     aspect-ratio: 1 / 1; /* Ratio largeur / hauteur pour conserver les proportions : doit être le même que celui du canvas défini dans le js */
