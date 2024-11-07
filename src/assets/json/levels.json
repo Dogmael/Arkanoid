@@ -1,8 +1,8 @@
 {
     "lv1" : {
         "ballSpeed": 300,
-        "paddleWidthRation": 0.1,
-        "paddleHeightRation": 0.03,
+        "paddleWidthRation": 0.15,
+        "paddleHeightRation": 0.04,
         "map": [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],

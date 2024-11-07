@@ -55,7 +55,7 @@ class Plank {
 	}
 
 	draw (ctx, canvasHeight) {
-		ctx.drawImage(this.plankImg, this.x, canvasHeight - this.height, this.width, this.height);
+		ctx.drawImage(this.plankImg, this.x, this.y, this.width, this.height);
 	}
 
 	move (elapsed, canvasWidth) {
@@ -156,13 +156,14 @@ class Game {
 
 		const plankWidth = this.canvas.width * this.level.paddleWidthRation;
 		const plankHeight = this.canvas.height * this.level.paddleHeightRation;
+		const plankOffset = 50;
 		const plankX = this.canvas.width / 2 - plankWidth / 2;
-		const plankY = this.canvas.height - plankHeight;
+		const plankY = this.canvas.height - plankOffset - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		const ballRadius = plankHeight / 3;
+		const ballRadius = plankHeight / 4;
 		const ballX = this.canvas.width / 2;
-		const ballY = this.canvas.height - plankHeight - ballRadius;
+		const ballY = this.canvas.height - plankOffset - plankHeight - ballRadius;
 		const ballDx = 0;
 		const ballDy = 0;
 		this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
@@ -185,7 +186,7 @@ class Game {
 	}
 
 	render () {
-		if (this.ball.y + this.ball.radius <= this.plank.y) {
+		if (this.ball.y + this.ball.radius <= this.plank.y) { // Pourquoi besoin de cette marge en fonction des valeur de ball.y et paddleHeightRatio?
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 			if (this.backgroundLoaded) {
@@ -226,6 +227,8 @@ class Game {
 
 				this.blockImpactSound.currentTime = 0;
 				this.blockImpactSound.play();
+
+				break; // Prevent multiple block break
 			}
 		}
 
@@ -252,8 +255,12 @@ class Game {
 		const xDist = Math.abs((rectangle.x + rectangle.width / 2) - circle.x);
 		const yDist = Math.abs((rectangle.y + rectangle.height / 2) - circle.y);
 
-		// Check xDist and yDist compare to crircle radius and rectangle dimensions
-		if (xDist <= circle.radius + rectangle.width / 2 && yDist <= circle.radius + rectangle.height / 2) { return true; } else { return false; }
+		// Check xDist and yDist compare to circle radius and rectangle dimensions
+		if (xDist <= circle.radius + rectangle.width / 2 && yDist <= circle.radius + rectangle.height / 2) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	updatePlank (timestamp) {
