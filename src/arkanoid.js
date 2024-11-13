@@ -22,6 +22,11 @@ class Ball {
 
 		this.ballImg = new Image();
 		this.ballImg.src = './assets/images/ball.png';
+
+		this.plankImpactSound = new Audio('./assets/sonds/plankImpact.wav');
+		this.blockImpactSound = new Audio('./assets/sonds/blockImpact.wav');
+		this.plankImpactSound.load();
+		this.blockImpactSound.load();
 	}
 
 	draw (ctx) {
@@ -34,6 +39,16 @@ class Ball {
 		ctx.shadowOffsetY = -this.dy / 30;
 		ctx.fill();
 		ctx.shadowColor = 'transparent'; // Reset shadow
+	}
+
+	playPlankImpactSound () {
+		this.plankImpactSound.play();
+		this.plankImpactSound.currentTime = 0;
+	}
+
+	playBlockImpactSound () {
+		this.blockImpactSound.play();
+		this.blockImpactSound.currentTime = 0;
 	}
 }
 
@@ -58,8 +73,8 @@ class Plank {
 		ctx.drawImage(this.plankImg, this.x, this.y, this.width, this.height);
 	}
 
-	move (elapsed, canvasWidth) {
-		this.x = clamp(this.x + elapsed * this.vx * 0.9, 0, canvasWidth - this.width);
+	move (elapsed, canvasWidth, sideMaring) {
+		this.x = clamp(this.x + elapsed * this.vx * 0.9, sideMaring - 10, canvasWidth - this.width - sideMaring + 10);
 	}
 
 	startMotion (direction) {
@@ -134,24 +149,19 @@ class Game {
 			this.backgroundLoaded = true;
 		};
 
-		this.topMaring = 40;
-		this.sideMaring = 40;
+		this.topMaring = 37;
+		this.sideMaring = 37;
 
 		this.map = null;
 		this.plank = null;
 		this.ball = null;
 
-		this.level = { levelNumber: 0 };
-
-		this.initGame();
-
-		this.blockImpactSound = new Audio('./assets/sonds/blockImpact.wav');
-		this.plankImpactSound = new Audio('./assets/sonds/plankImpact.wav');
+		this.initLevel(1);
 	}
 
-	initGame () {
-		this.initNextLevel(this.level.levelNumber);
-
+	initLevel (levelNumber) {
+		const levelName = 'lv' + (levelNumber);
+		this.level = new Level(levels[levelName]);
 		this.map = new Map(this.canvas.width, this.canvas.height, this.sideMaring, this.topMaring, this.level.map);
 
 		const plankWidth = this.canvas.width * this.level.paddleWidthRation;
@@ -170,22 +180,32 @@ class Game {
 
 		this.gameInProgress = false;
 		this.loose = false;
-	}
-
-	initNextLevel (currentLevelNumber) {
-		const nextLevelName = 'lv' + (currentLevelNumber + 1);
-		this.level = new Level(levels[nextLevelName]);
+		this.resetScore();
 	}
 
 	start () {
 		if (!this.gameInProgress) {
-			this.ball.dx = Math.random() * 3;
+			this.ball.dx = Math.random() * 5;
 			this.ball.dy = -Math.sqrt(this.level.ballSpeed - this.ball.dx ** 2);
 			this.gameInProgress = true;
 		}
 	}
 
+	displayScore () {
+		document.getElementById('scoreValue').textContent = this.score;
+	}
+
+	resetScore () {
+		this.score = 0;
+		document.getElementById('scoreValue').textContent = this.score;
+	}
+
 	render () {
+		if (this.map.blocks.length === 0) {
+			this.level.levelNumber++;
+			this.initLevel(this.level.levelNumber);
+		}
+
 		if (this.ball.y + this.ball.radius <= this.plank.y) { // Pourquoi besoin de cette marge en fonction des valeur de ball.y et paddleHeightRatio?
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -203,10 +223,6 @@ class Game {
 
 			if (!this.loose) {
 				this.loose = true;
-
-				// Play loose sound
-				const looseSound = new Audio('./assets/sonds/loose.wav');
-				looseSound.play();
 			}
 		}
 	}
@@ -223,22 +239,20 @@ class Game {
 			if (this.collision(this.map.blocks[blockNumber], this.ball)) {
 				if (!dyChanged) { this.ball.dy = -this.ball.dy; }
 
+				// Break block
+				this.score += this.map.blocks[blockNumber].point;
 				this.map.blocks.splice(blockNumber, 1);
-
-				this.blockImpactSound.currentTime = 0;
-				this.blockImpactSound.play();
-
-				break; // Prevent multiple block break
+				this.ball.playBlockImpactSound();
+				break;
 			}
 		}
 
 		// Plank
 		if (this.collision(this.plank, this.ball) && this.ball.dy > 0) {
 			this.ball.dy = -this.ball.dy;
-			this.ball.dx = (this.ball.x - (this.plank.x + this.plank.width / 2)) * 0.04;
+			this.ball.dx = (this.ball.x - (this.plank.x + this.plank.width / 2)) * 0.06;
 
-			this.plankImpactSound.currentTime = 0;
-			this.plankImpactSound.play();
+			this.ball.playPlankImpactSound();
 		}
 
 		// Sides walls
@@ -269,7 +283,7 @@ class Game {
 				this.lastTimestamp = timestamp;
 			}
 			const elapsed = timestamp - this.lastTimestamp;
-			this.plank.move(elapsed, this.canvas.width);
+			this.plank.move(elapsed, this.canvas.width, this.sideMaring);
 
 			// Stick ball to plank before game start
 			if (!this.gameInProgress) {
@@ -303,20 +317,22 @@ class Game {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	// Play newGame sound
-	const newGameSound = new Audio('./assets/sonds/newGame.wav');
-	newGameSound.play();
-
 	// Boucle principale
 	const canvas = document.getElementById('arkanoid');
 	const game = new Game(canvas);
 
 	setInterval(game.render.bind(game), (1000 / 60)); // 60 FPS
 
+	setInterval(() => {
+		if (game.gameInProgress) {
+			game.displayScore();
+		}
+	}, 1000 / 30);
+
 	// Plank mouvements
 	addEventListener('keydown', game.handleKeyDown.bind(game));
 	addEventListener('keyup', game.handleKeyUp.bind(game));
 });
 
-// // Export for test
+// Export for test
 export { Game, Plank, Ball };

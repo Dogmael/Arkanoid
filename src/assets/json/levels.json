@@ -1,15 +1,26 @@
 {
     "lv1" : {
+        "levelNumber": 2,
         "ballSpeed": 300,
-        "paddleWidthRation": 0.15,
+        "paddleWidthRation": 0.2,
         "paddleHeightRation": 0.04,
         "map": [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [2, 2, 2, 2, 2, 2, 2, 2, 2],
             [1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [2, 2, 2, 2, 2, 2, 2, 2, 2],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1]
+            [2, 2, 2, 2, 2, 2, 2, 2, 2]
+        ]
+    },
+    "lv2" : {
+        "levelNumber": 2,
+        "ballSpeed": 300,
+        "paddleWidthRation": 0.2,
+        "paddleHeightRation": 0.04,
+        "map": [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 2, 1, 0, 0, 0, 0, 0]
         ]
     } 
 }
