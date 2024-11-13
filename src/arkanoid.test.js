@@ -10,7 +10,8 @@ global.Audio = jest.fn().mockImplementation(() => ({
 document.body.innerHTML = `
   <div id="score"></div>
   <canvas id="arkanoid" width="500" height="700"></canvas>
-  <div id="scoreValue"></div>;
+  <div id="scoreValue"></div>
+  <div id="levelValue"></div>
 `;
 
 const canvas = document.getElementById('arkanoid');

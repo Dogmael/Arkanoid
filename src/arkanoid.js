@@ -181,6 +181,7 @@ class Game {
 		this.gameInProgress = false;
 		this.loose = false;
 		this.resetScore();
+		this.displayLevel();
 	}
 
 	start () {
@@ -193,6 +194,10 @@ class Game {
 
 	displayScore () {
 		document.getElementById('scoreValue').textContent = this.score;
+	}
+
+	displayLevel () {
+		document.getElementById('levelValue').textContent = this.level.levelNumber;
 	}
 
 	resetScore () {
