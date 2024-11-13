@@ -1,9 +1,16 @@
 import 'jest-canvas-mock';
 import { Game, Plank, Ball } from './arkanoid.js';
 
+global.Audio = jest.fn().mockImplementation(() => ({
+	load: jest.fn(),
+	play: jest.fn(),
+	pause: jest.fn()
+}));
+
 document.body.innerHTML = `
   <div id="score"></div>
   <canvas id="arkanoid" width="500" height="700"></canvas>
+  <div id="scoreValue"></div>;
 `;
 
 const canvas = document.getElementById('arkanoid');
