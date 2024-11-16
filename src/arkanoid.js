@@ -18,7 +18,7 @@ class Ball {
 		this.y = y;
 		this.dx = dx;
 		this.dy = dy;
-		this.color = '#12AAFEff';
+		this.color = '#12AAFEff'; // picton-blue
 
 		this.ballImg = new Image();
 		this.ballImg.src = './assets/images/ball.png';
@@ -149,6 +149,12 @@ class Game {
 			this.backgroundLoaded = true;
 		};
 
+		this.gameOverSound = new Audio('./assets/sonds/gameOver.mp3');
+		this.gameOverSound.load();
+
+		this.winSound = new Audio('./assets/sonds/win.mp3');
+		this.winSound.load();
+
 		this.topMaring = 37;
 		this.sideMaring = 37;
 
@@ -156,6 +162,9 @@ class Game {
 		this.plank = null;
 		this.ball = null;
 
+		this.gameEnded = false;
+		this.remaningLifes = 3;
+		this.resetScore();
 		this.initLevel(1);
 	}
 
@@ -164,6 +173,13 @@ class Game {
 		this.level = new Level(levels[levelName]);
 		this.map = new Map(this.canvas.width, this.canvas.height, this.sideMaring, this.topMaring, this.level.map);
 
+		this.initPlankAndBall();
+
+		this.gameInProgress = false;
+		this.displayLevel();
+	}
+
+	initPlankAndBall () {
 		const plankWidth = this.canvas.width * this.level.paddleWidthRation;
 		const plankHeight = this.canvas.height * this.level.paddleHeightRation;
 		const plankOffset = 50;
@@ -177,11 +193,6 @@ class Game {
 		const ballDx = 0;
 		const ballDy = 0;
 		this.ball = new Ball(ballRadius, ballX, ballY, ballDx, ballDy);
-
-		this.gameInProgress = false;
-		this.loose = false;
-		this.resetScore();
-		this.displayLevel();
 	}
 
 	start () {
@@ -205,10 +216,47 @@ class Game {
 		document.getElementById('scoreValue').textContent = this.score;
 	}
 
+	newLife () {
+		this.remaningLifes -= 1;
+
+		this.gameInProgress = false;
+		this.initPlankAndBall();
+	}
+
+	drawLifes () {
+		const width = 100;
+		const height = 30;
+		let x = this.sideMaring;
+		const y = this.canvas.height - height;
+
+		for (let i = 0; i < this.remaningLifes; i++) {
+			this.ctx.drawImage(this.plank.plankImg, x, y, width, height);
+			x += width;
+		}
+	}
+
+	displayEndGame (text) {
+		this.ctx.font = '58px MyWebFont';
+		this.ctx.textAlign = 'center';
+		this.ctx.fillStyle = 'black';
+		this.ctx.fillText(text, this.canvas.width / 2, this.canvas.height / 2);
+	}
+
 	render () {
+		if (this.gameEnded) return;
+
 		if (this.map.blocks.length === 0) {
 			this.level.levelNumber++;
-			this.initLevel(this.level.levelNumber);
+
+			if (levels['lv' + this.level.levelNumber] === undefined) { // Win
+				this.gameEnded = true;
+
+				this.displayEndGame('YOU WIN');
+				this.winSound.play();
+				return;
+			} else { // Next level
+				this.initLevel(this.level.levelNumber);
+			}
 		}
 
 		if (this.ball.y + this.ball.radius <= this.plank.y) { // Pourquoi besoin de cette marge en fonction des valeur de ball.y et paddleHeightRatio?
@@ -223,11 +271,15 @@ class Game {
 			this.map.draw(this.ctx);
 			this.ball.draw(this.ctx);
 			this.plank.draw(this.ctx, this.canvas.height);
-		} else { // Loose
-			this.gameInProgress = false;
 
-			if (!this.loose) {
-				this.loose = true;
+			this.drawLifes();
+		} else { // Loose
+			if (this.remaningLifes > 0) {
+				this.newLife();
+			} else {
+				this.gameEnded = true;
+				this.displayEndGame('GAME OVER');
+				this.gameOverSound.play();
 			}
 		}
 	}
