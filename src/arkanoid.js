@@ -149,7 +149,7 @@ class Game {
 		this.winSound = new Audio('./assets/sonds/win.mp3');
 		this.winSound.load();
 
-		this.newLevelSound = new Audio('./assets/sonds/newlevel.mp3');
+		this.newLevelSound = new Audio('./assets/sonds/newLevel.mp3');
 		this.newLevelSound.load();
 
 		this.topMaring = 37;
@@ -252,7 +252,9 @@ class Game {
 	render () {
 		if (this.gameEnded) return;
 
-		if (this.map.blocks.length === 0) {
+		const breakableBlocks = this.map.blocks.filter((block) => block.hardness !== -1);
+
+		if (breakableBlocks.length === 0) {
 			this.level.levelNumber++;
 
 			if (levels['lv' + this.level.levelNumber] === undefined) { // Win
@@ -304,9 +306,16 @@ class Game {
 				if (!dyChanged) { this.ball.dy = -this.ball.dy; }
 
 				// Break block
-				this.score += this.map.blocks[blockNumber].point;
-				this.map.blocks.splice(blockNumber, 1);
-				this.ball.playBlockImpactSound();
+				if (this.map.blocks[blockNumber].hardness !== -1) { // Breakable blocks
+					this.map.blocks[blockNumber].hardness -= 1;
+				}
+
+				if (this.map.blocks[blockNumber].hardness === 0) {
+					this.score += this.map.blocks[blockNumber].point;
+					this.map.blocks.splice(blockNumber, 1);
+					this.ball.playBlockImpactSound();
+				}
+
 				break;
 			}
 		}
