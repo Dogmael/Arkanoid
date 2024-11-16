@@ -18,7 +18,6 @@ class Ball {
 		this.y = y;
 		this.dx = dx;
 		this.dy = dy;
-		this.color = '#12AAFEff'; // picton-blue
 
 		this.ballImg = new Image();
 		this.ballImg.src = './assets/images/ball.png';
