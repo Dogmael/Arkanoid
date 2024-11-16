@@ -1,17 +1,26 @@
 {
     "1" : {
-        "color": "#EBDC30ff",
-        "hardness": 1,
-        "points": 1
+        "color": "rgb(110, 201, 251)",
+        "hardness": 2,
+        "points": 2
     },
     "2" : {
-        "color": "#FB6FF9ff",
+        "color": "#FF102Aff",
         "hardness": 2,
         "points": 2
     },
     "3" : {
         "color": "grey",
-        "hardness": -1,
-        "points": 2
+        "hardness": -1
+    },
+    "4" : {
+        "color": "yellow",
+        "hardness": 1,
+        "points": 1
+    },
+    "5" : {
+        "color": "white",
+        "hardness": 1,
+        "points": 1
     }
 }
