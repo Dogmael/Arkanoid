@@ -8,5 +8,10 @@
         "color": "#FB6FF9ff",
         "hardness": 2,
         "points": 2
+    },
+    "3" : {
+        "color": "grey",
+        "hardness": -1,
+        "points": 2
     }
 }
