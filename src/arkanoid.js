@@ -143,17 +143,14 @@ class Game {
 		this.ctx = canvas.getContext('2d');
 		this.ctx.imageSmoothingEnabled = false;
 
-		this.backgroundImg = new Image();
-		this.backgroundImg.src = './assets/images/backgrounds/background4.png';
-		this.backgroundImg.onload = () => {
-			this.backgroundLoaded = true;
-		};
-
 		this.gameOverSound = new Audio('./assets/sonds/gameOver.mp3');
 		this.gameOverSound.load();
 
 		this.winSound = new Audio('./assets/sonds/win.mp3');
 		this.winSound.load();
+
+		this.newLevelSound = new Audio('./assets/sonds/newlevel.mp3');
+		this.newLevelSound.load();
 
 		this.topMaring = 37;
 		this.sideMaring = 37;
@@ -163,7 +160,7 @@ class Game {
 		this.ball = null;
 
 		this.gameEnded = false;
-		this.remaningLifes = 3;
+		this.remaningLifes = 2;
 		this.resetScore();
 		this.initLevel(1);
 	}
@@ -171,12 +168,22 @@ class Game {
 	initLevel (levelNumber) {
 		const levelName = 'lv' + (levelNumber);
 		this.level = new Level(levels[levelName]);
+
+		// Init background
+		this.backgroundImg = new Image();
+		this.backgroundImg.src = './assets/images/backgrounds/background' + this.level.levelNumber + '.png';
+		this.backgroundImg.onload = () => {
+			this.backgroundLoaded = true;
+		};
+
+		// Init map
 		this.map = new Map(this.canvas.width, this.canvas.height, this.sideMaring, this.topMaring, this.level.map);
 
+		// Init ball and plank
 		this.initPlankAndBall();
-
 		this.gameInProgress = false;
-		this.displayLevel();
+		this.displayLevelNumber();
+		if (levelName !== 'lv1') this.newLevelSound.play();
 	}
 
 	initPlankAndBall () {
@@ -207,7 +214,7 @@ class Game {
 		document.getElementById('scoreValue').textContent = this.score;
 	}
 
-	displayLevel () {
+	displayLevelNumber () {
 		document.getElementById('levelValue').textContent = this.level.levelNumber;
 	}
 
