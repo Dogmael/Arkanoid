@@ -130,7 +130,8 @@ class Map {
 	}
 
 	draw (ctx) {
-		for (const block of this.blocks) {
+		const remainingBlocks = this.blocks.filter((block) => block.hardness !== 0);
+		for (const block of remainingBlocks) {
 			block.draw(ctx);
 		}
 	}
@@ -251,9 +252,9 @@ class Game {
 	render () {
 		if (this.gameEnded) return;
 
-		const breakableBlocks = this.map.blocks.filter((block) => block.hardness !== -1);
+		const remainingBreakableBlocks = this.map.blocks.filter((block) => block.hardness > 0);
 
-		if (breakableBlocks.length === 0) {
+		if (remainingBreakableBlocks.length === 0) {
 			this.level.levelNumber++;
 
 			if (levels['lv' + this.level.levelNumber] === undefined) { // Win
@@ -299,25 +300,7 @@ class Game {
 		}
 
 		// Block collision
-		for (let blockNumber = 0; blockNumber < this.map.blocks.length; blockNumber++) {
-			const dyChanged = false;
-			if (this.collision(this.map.blocks[blockNumber], this.ball)) {
-				if (!dyChanged) { this.ball.dy = -this.ball.dy; }
-
-				// Break block
-				if (this.map.blocks[blockNumber].hardness !== -1) { // Breakable blocks
-					this.map.blocks[blockNumber].hardness -= 1;
-				}
-
-				if (this.map.blocks[blockNumber].hardness === 0) {
-					this.score += this.map.blocks[blockNumber].point;
-					this.map.blocks.splice(blockNumber, 1);
-					this.ball.playBlockImpactSound();
-				}
-
-				break;
-			}
-		}
+		this.blockCollision();
 
 		// Plank
 		if (this.collision(this.plank, this.ball) && this.ball.dy > 0) {
@@ -334,6 +317,71 @@ class Game {
 
 		this.ball.x += this.ball.dx;
 		this.ball.y += this.ball.dy;
+	}
+
+	getCollisedBlock () {
+		const collisedBlocks = [];
+		let collisedBlock = null;
+
+		const remainingBlocks = this.map.blocks.filter((block) => block.hardness !== 0);
+		for (const currentBlock of remainingBlocks) {
+			if (this.collision(currentBlock, this.ball)) {
+				collisedBlocks.push(currentBlock);
+			}
+		}
+
+		if (collisedBlocks.length <= 1) {
+			collisedBlock = collisedBlocks[0];
+		} else {
+			// Get last ball position
+			const lastBallPosition = { x: this.ball.x - this.ball.dx, y: this.ball.y - this.ball.dy };
+
+			// Get closest block from ball
+			collisedBlock = this.getClosestBlock(lastBallPosition, collisedBlocks);
+		}
+
+		return collisedBlock;
+	}
+
+	getClosestBlock (ballPosition, blocks) {
+		// On prend le distances au centre
+		const distsToRectangle = [];
+
+		for (const block of blocks) {
+			// Distance between center of circle and center of rectangle
+			const xDist = Math.abs((block.x + block.width / 2) - ballPosition.x);
+			const yDist = Math.abs((block.y + block.height / 2) - ballPosition.y);
+			const distToRectangle = Math.sqrt(xDist ** 2 + yDist ** 2);
+
+			distsToRectangle.push({ distToRectangle: distToRectangle, block: block });
+		}
+
+		const colestBlock = distsToRectangle.reduce((prev, curr) => (curr.distToRectangle < prev.distToRectangle) ? curr : prev).block;
+
+		return colestBlock;
+	}
+
+	blockCollision () {
+		const collisedBlock = this.getCollisedBlock(); // Reference type
+
+		if (collisedBlock === undefined) return;
+
+		// Change ball direction
+		if (collisedBlock.x <= this.ball.x && this.ball.x <= collisedBlock.x + collisedBlock.width) { // Collision from above or bellow
+			this.ball.dy *= -1;
+		} else { // Side collision
+			this.ball.dx *= -1;
+		}
+
+		// Break blocks
+		if (collisedBlock.hardness !== -1) { // Breakable blocks
+			collisedBlock.hardness -= 1;
+		}
+
+		if (collisedBlock.hardness === 0) {
+			this.score += collisedBlock.point;
+			this.ball.playBlockImpactSound();
+		}
 	}
 
 	collision (rectangle, circle) {
