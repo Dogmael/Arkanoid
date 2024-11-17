@@ -162,6 +162,8 @@ class Game {
 		this.gameEnded = false;
 		this.remaningLifes = 2;
 		this.resetScore();
+		this.bestScore = localStorage.getItem('bestScore') ?? 0;
+		this.displayBestScore();
 		this.initLevel(1);
 	}
 
@@ -212,6 +214,10 @@ class Game {
 
 	displayScore () {
 		document.getElementById('scoreValue').textContent = this.score;
+	}
+
+	displayBestScore () {
+		document.getElementById('bestScoreValue').textContent = this.bestScore;
 	}
 
 	displayLevelNumber () {
@@ -341,6 +347,11 @@ class Game {
 
 		if (collisedBlock.hardness === 0) {
 			this.score += collisedBlock.point;
+			if (this.score > this.bestScore) {
+				this.bestScore = this.score;
+				localStorage.setItem('bestScore', this.bestScore);
+				this.displayBestScore();
+			}
 		}
 	}
 
