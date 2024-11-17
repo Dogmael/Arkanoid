@@ -11,6 +11,7 @@ document.body.innerHTML = `
   <div id="score"></div>
   <canvas id="arkanoid" width="500" height="700"></canvas>
   <div id="scoreValue"></div>
+  <div id="bestScoreValue"></div>
   <div id="levelValue"></div>
 `;
 
