@@ -194,7 +194,7 @@ class Game {
 		const plankY = this.canvas.height - plankOffset - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		const ballRadius = plankHeight / 6;
+		const ballRadius = plankHeight / 4;
 		const ballX = this.canvas.width / 2;
 		const ballY = this.canvas.height - plankOffset - plankHeight - ballRadius;
 		const ballDx = 0;
