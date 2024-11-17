@@ -319,6 +319,31 @@ class Game {
 		this.ball.y += this.ball.dy;
 	}
 
+	blockCollision () {
+		const collisedBlock = this.getCollisedBlock(); // Reference type
+
+		if (collisedBlock === undefined) return;
+
+		// Change ball direction
+		if (collisedBlock.x <= this.ball.x && this.ball.x <= collisedBlock.x + collisedBlock.width) { // Collision from above or bellow
+			this.ball.y -= this.ball.dy;
+			this.ball.dy *= -1; // Correct ball position to be sure it's outside of block
+		} else { // Side collision
+			this.ball.x -= this.ball.dx;
+			this.ball.dx *= -1; // Correct ball position to be sure it's outside of block
+		}
+
+		// Break blocks
+		if (collisedBlock.hardness !== -1) { // Breakable blocks
+			collisedBlock.hardness -= 1;
+		}
+
+		if (collisedBlock.hardness === 0) {
+			this.score += collisedBlock.point;
+			this.ball.playBlockImpactSound();
+		}
+	}
+
 	getCollisedBlock () {
 		const collisedBlocks = [];
 		let collisedBlock = null;
@@ -359,29 +384,6 @@ class Game {
 		const colestBlock = distsToRectangle.reduce((prev, curr) => (curr.distToRectangle < prev.distToRectangle) ? curr : prev).block;
 
 		return colestBlock;
-	}
-
-	blockCollision () {
-		const collisedBlock = this.getCollisedBlock(); // Reference type
-
-		if (collisedBlock === undefined) return;
-
-		// Change ball direction
-		if (collisedBlock.x <= this.ball.x && this.ball.x <= collisedBlock.x + collisedBlock.width) { // Collision from above or bellow
-			this.ball.dy *= -1;
-		} else { // Side collision
-			this.ball.dx *= -1;
-		}
-
-		// Break blocks
-		if (collisedBlock.hardness !== -1) { // Breakable blocks
-			collisedBlock.hardness -= 1;
-		}
-
-		if (collisedBlock.hardness === 0) {
-			this.score += collisedBlock.point;
-			this.ball.playBlockImpactSound();
-		}
 	}
 
 	collision (rectangle, circle) {
