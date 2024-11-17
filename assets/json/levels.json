@@ -3,7 +3,7 @@
         "levelNumber": 1,
         "ballSpeed": 300,
         "paddleWidthRation": 0.2,
-        "paddleHeightRation": 0.05,
+        "paddleHeightRation": 0.06,
         "map": [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -17,7 +17,7 @@
         "levelNumber": 2,
         "ballSpeed": 300,
         "paddleWidthRation": 0.2,
-        "paddleHeightRation": 0.05,
+        "paddleHeightRation": 0.06,
         "map": [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -32,7 +32,7 @@
         "levelNumber": 3,
         "ballSpeed": 300,
         "paddleWidthRation": 0.2,
-        "paddleHeightRation": 0.05,
+        "paddleHeightRation": 0.06,
         "map": [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
