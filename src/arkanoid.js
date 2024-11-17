@@ -73,7 +73,7 @@ class Plank {
 	}
 
 	move (elapsed, canvasWidth, sideMaring) {
-		this.x = clamp(this.x + elapsed * this.vx * 0.9, sideMaring - 10, canvasWidth - this.width - sideMaring + 10);
+		this.x = clamp(this.x + elapsed * this.vx * 1.1, sideMaring - 10, canvasWidth - this.width - sideMaring + 10);
 	}
 
 	startMotion (direction) {
@@ -194,7 +194,7 @@ class Game {
 		const plankY = this.canvas.height - plankOffset - plankHeight;
 		this.plank = new Plank(plankWidth, plankHeight, plankX, plankY);
 
-		const ballRadius = plankHeight / 4;
+		const ballRadius = plankHeight / 6;
 		const ballX = this.canvas.width / 2;
 		const ballY = this.canvas.height - plankOffset - plankHeight - ballRadius;
 		const ballDx = 0;
@@ -336,11 +336,11 @@ class Game {
 		// Break blocks
 		if (collisedBlock.hardness !== -1) { // Breakable blocks
 			collisedBlock.hardness -= 1;
+			this.ball.playBlockImpactSound();
 		}
 
 		if (collisedBlock.hardness === 0) {
 			this.score += collisedBlock.point;
-			this.ball.playBlockImpactSound();
 		}
 	}
 

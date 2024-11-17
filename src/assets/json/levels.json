@@ -1,7 +1,7 @@
 {
     "lv1" : {
         "levelNumber": 1,
-        "ballSpeed": 300,
+        "ballSpeed": 200,
         "paddleWidthRation": 0.2,
         "paddleHeightRation": 0.06,
         "map": [
@@ -15,7 +15,7 @@
     },
     "lv2" : {
         "levelNumber": 2,
-        "ballSpeed": 300,
+        "ballSpeed": 200,
         "paddleWidthRation": 0.2,
         "paddleHeightRation": 0.06,
         "map": [
@@ -30,7 +30,7 @@
     }, 
     "lv3" : {
         "levelNumber": 3,
-        "ballSpeed": 300,
+        "ballSpeed": 200,
         "paddleWidthRation": 0.2,
         "paddleHeightRation": 0.06,
         "map": [
