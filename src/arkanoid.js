@@ -162,7 +162,7 @@ class Game {
 		this.gameEnded = false;
 		this.remaningLifes = 2;
 		this.resetScore();
-		this.bestScore = localStorage.getItem('bestScore') ?? 0;
+		this.highScore = localStorage.getItem('highScore') ?? 0;
 		this.displayBestScore();
 		this.initLevel(1);
 	}
@@ -221,7 +221,7 @@ class Game {
 	}
 
 	displayBestScore () {
-		document.getElementById('bestScoreValue').textContent = this.bestScore;
+		document.getElementById('highScoreValue').textContent = this.highScore;
 	}
 
 	displayLevelNumber () {
@@ -255,8 +255,8 @@ class Game {
 	displayEndGame (text) {
 		this.ctx.font = '58px MyWebFont';
 		this.ctx.textAlign = 'center';
-		this.ctx.fillStyle = 'black';
-		this.ctx.fillText(text, this.canvas.width / 2, this.canvas.height / 2);
+		this.ctx.fillStyle = 'white';
+		this.ctx.fillText(text, this.canvas.width / 2, this.canvas.height / 2.2);
 	}
 
 	render () {
@@ -355,9 +355,9 @@ class Game {
 			const timeScoreMultiplicator = Math.max(1, Math.round((60 - levelElapsedTime) / 6)); // On commence à 10 points et on arrive à 1 en une minute
 			this.score += collisedBlock.point * timeScoreMultiplicator;
 
-			if (this.score > this.bestScore) {
-				this.bestScore = this.score;
-				localStorage.setItem('bestScore', this.bestScore);
+			if (this.score > this.highScore) {
+				this.highScore = this.score;
+				localStorage.setItem('highScore', this.highScore);
 				this.displayBestScore();
 			}
 		}
