@@ -159,11 +159,20 @@ class Game {
 		this.plank = null;
 		this.ball = null;
 
-		this.gameEnded = false;
+		this.win = false;
+		this.gameOver = false;
 		this.remaningLifes = 2;
 		this.resetScore();
 		this.highScore = localStorage.getItem('highScore') ?? 0;
 		this.displayBestScore();
+		this.initLevel(1);
+	}
+
+	restartGame () {
+		this.win = false;
+		this.gameOver = false;
+		this.remaningLifes = 2;
+		this.resetScore();
 		this.initLevel(1);
 	}
 
@@ -256,11 +265,39 @@ class Game {
 		this.ctx.font = '58px MyWebFont';
 		this.ctx.textAlign = 'center';
 		this.ctx.fillStyle = 'white';
-		this.ctx.fillText(text, this.canvas.width / 2, this.canvas.height / 2.2);
+		this.ctx.fillText(text, this.canvas.width / 2, this.canvas.height / 2);
+	}
+
+	displayRestartButton (alpha) {
+		this.ctx.font = '40px MyWebFont';
+		this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+		this.ctx.fillText('Click to restart', this.canvas.width / 2, this.canvas.height / 1.6);
 	}
 
 	render () {
-		if (this.gameEnded) return;
+		if (this.win) return;
+
+		if (this.gameOver) {
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			if (this.backgroundLoaded) {
+				this.ctx.drawImage(this.backgroundImg, 0, 0, this.canvas.width, this.canvas.height);
+			}
+			this.map.draw(this.ctx);
+			this.ball.draw(this.ctx);
+			this.plank.draw(this.ctx, this.canvas.height);
+			this.drawLifes();
+
+			this.displayEndGame('GAME OVER');
+
+			// Ajouter le clignotement ici
+			const fadeDuration = 2000; // Durée totale d'un cycle de clignotement
+			const currentTime = performance.now();
+			const progress = (currentTime % fadeDuration) / fadeDuration;
+			const alpha = Math.abs(Math.cos(progress * Math.PI)); // Oscille entre 0 et 1
+
+			this.displayRestartButton(alpha); // Appeler avec l'alpha calculé
+			return;
+		}
 
 		const remainingBreakableBlocks = this.map.blocks.filter((block) => block.hardness > 0);
 
@@ -268,7 +305,7 @@ class Game {
 			this.level.levelNumber++;
 
 			if (levels['lv' + this.level.levelNumber] === undefined) { // Win
-				this.gameEnded = true;
+				this.win = true;
 
 				this.displayEndGame('YOU WIN');
 				this.winSound.play();
@@ -296,8 +333,7 @@ class Game {
 			if (this.remaningLifes > 0) {
 				this.newLife();
 			} else {
-				this.gameEnded = true;
-				this.displayEndGame('GAME OVER');
+				this.gameOver = true;
 				this.gameOverSound.play();
 			}
 		}
@@ -440,6 +476,13 @@ class Game {
 	}
 
 	handleKeyDown (event) {
+		// Handle end of game
+		if (this.win) return;
+		if (this.gameOver && event.key === 'Enter') {
+			this.restartGame();
+			return;
+		}
+
 		if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
 			this.plank.startMotion(event.key === 'ArrowRight' ? 'right' : 'left');
 			requestAnimationFrame(this.updatePlank.bind(this));
@@ -473,6 +516,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Plank mouvements
 	addEventListener('keydown', game.handleKeyDown.bind(game));
 	addEventListener('keyup', game.handleKeyUp.bind(game));
+
+	// Click on canvas after game over
+	addEventListener('click', (event) => {
+		const rect = canvas.getBoundingClientRect();
+		const x = event.clientX - rect.left;
+		const y = event.clientY - rect.top;
+
+		if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height) {
+			if (game.gameOver) {
+				game.restartGame();
+			}
+		}
+	});
 });
 
 // Export for test
