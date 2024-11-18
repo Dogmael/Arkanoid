@@ -186,6 +186,9 @@ class Game {
 		this.gameInProgress = false;
 		this.displayLevelNumber();
 		if (levelName !== 'lv1') this.newLevelSound.play();
+
+		// Init times
+		this.gameStartTime = null;
 	}
 
 	initPlankAndBall () {
@@ -209,6 +212,7 @@ class Game {
 			this.ball.dx = Math.random() * 5;
 			this.ball.dy = -Math.sqrt(this.level.ballSpeed - this.ball.dx ** 2);
 			this.gameInProgress = true;
+			if (!this.gameStartTime) this.gameStartTime = Date.now();
 		}
 	}
 
@@ -346,7 +350,11 @@ class Game {
 		}
 
 		if (collisedBlock.hardness === 0) {
-			this.score += collisedBlock.point;
+			// Sccore calculation
+			const levelElapsedTime = (Date.now() - this.gameStartTime) / 1000; // Nb de second from start of level
+			const timeScoreMultiplicator = Math.max(1, Math.round((60 - levelElapsedTime) / 6)); // On commence à 10 points et on arrive à 1 en une minute
+			this.score += collisedBlock.point * timeScoreMultiplicator;
+
 			if (this.score > this.bestScore) {
 				this.bestScore = this.score;
 				localStorage.setItem('bestScore', this.bestScore);
