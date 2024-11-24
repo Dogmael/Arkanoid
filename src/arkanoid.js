@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		lastTouchX = null;
 	});
 
-	function handleTouchDirection(event, game) {
+	function handleTouchDirection (event, game) {
 		const touchX = event.touches[0].clientX; // Position actuelle du doigt
 		const plank = game.plank;
 
