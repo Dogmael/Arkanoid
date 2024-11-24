@@ -166,8 +166,6 @@ class Game {
 		this.highScore = localStorage.getItem('highScore') ?? 0;
 		this.displayBestScore();
 		this.initLevel(1);
-
-		this.lastTouchX = null;
 	}
 
 	restartGame () {
@@ -500,27 +498,6 @@ class Game {
 			this.plank.stopMotion();
 		}
 	}
-
-	handleTouchDirection (event, game) {
-		const touchX = event.touches[0].clientX; // Position actuelle du doigt
-		const plank = game.plank;
-
-		if (this.lastTouchX !== null) {
-			const deltaX = touchX - this.lastTouchX; // Différence entre les positions actuelle et précédente
-
-			if (deltaX > 0) {
-				// Mouvement vers la droite
-				plank.startMotion('right');
-				requestAnimationFrame(this.updatePlank.bind(this));
-			} else if (deltaX < 0) {
-				// Mouvement vers la gauche
-				plank.startMotion('left');
-				requestAnimationFrame(this.updatePlank.bind(this));
-			}
-		}
-
-		this.lastTouchX = touchX; // Mettre à jour la position pour la prochaine détection
-	}
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -555,22 +532,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Gestion du tactile
 	document.addEventListener('touchstart', (event) => {
-		game.lastTouchX = event.touches[0].clientX;
+		// disable scroll
+		event.preventDefault();
+
 		game.start();
+
+		if (game.gameOver) {
+			game.restartGame();
+		}
 	});
 
 	document.addEventListener('touchmove', (event) => {
-		// disable scroll
-		game.handleTouchDirection(event, game);
-	});
+		event.preventDefault();
 
-	document.addEventListener('touchend', () => {
-		game.lastTouchX = null;
-	});
+		const touchX = event.touches[0].clientX; // Position actuelle du doigt
+		const rect = game.canvas.getBoundingClientRect();
+		const relativeTouchX = touchX - rect.left; // Position relative dans le canvas
 
-	// Arrêter le mouvement lorsque le doigt est levé
-	document.addEventListener('touchend', () => {
-		game.plank.stopMotion();
+		// Positionner la raquette en fonction de la position du doigt
+		game.plank.x = clamp(relativeTouchX - game.plank.width / 2, game.sideMaring - 10, game.canvas.width - game.plank.width - game.sideMaring + 10);
+		if (!game.gameInProgress) {
+			game.ball.x = game.plank.x + game.plank.width / 2;
+		}
 	});
 });
 
