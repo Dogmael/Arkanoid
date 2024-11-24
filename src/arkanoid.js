@@ -166,6 +166,8 @@ class Game {
 		this.highScore = localStorage.getItem('highScore') ?? 0;
 		this.displayBestScore();
 		this.initLevel(1);
+
+		this.lastTouchX = null;
 	}
 
 	restartGame () {
@@ -498,6 +500,27 @@ class Game {
 			this.plank.stopMotion();
 		}
 	}
+
+	handleTouchDirection (event, game) {
+		const touchX = event.touches[0].clientX; // Position actuelle du doigt
+		const plank = game.plank;
+
+		if (this.lastTouchX !== null) {
+			const deltaX = touchX - this.lastTouchX; // Différence entre les positions actuelle et précédente
+
+			if (deltaX > 0) {
+				// Mouvement vers la droite
+				plank.startMotion('right');
+				requestAnimationFrame(this.updatePlank.bind(this));
+			} else if (deltaX < 0) {
+				// Mouvement vers la gauche
+				plank.startMotion('left');
+				requestAnimationFrame(this.updatePlank.bind(this));
+			}
+		}
+
+		this.lastTouchX = touchX; // Mettre à jour la position pour la prochaine détection
+	}
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -531,44 +554,22 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	// Gestion du tactile
-
-	let lastTouchX = null; // Pour stocker la dernière position horizontale du doigt
-
-	canvas.addEventListener('touchstart', (event) => {
-		// Initialiser la position initiale du toucher
-		lastTouchX = event.touches[0].clientX;
+	document.addEventListener('touchstart', (event) => {
+		game.lastTouchX = event.touches[0].clientX;
+		game.start();
 	});
 
-	canvas.addEventListener('touchmove', (event) => {
-		handleTouchDirection(event, game);
+	document.addEventListener('touchmove', (event) => {
+		// disable scroll
+		game.handleTouchDirection(event, game);
 	});
 
-	canvas.addEventListener('touchend', () => {
-		// Réinitialiser la position après avoir levé le doigt
-		lastTouchX = null;
+	document.addEventListener('touchend', () => {
+		game.lastTouchX = null;
 	});
-
-	function handleTouchDirection (event, game) {
-		const touchX = event.touches[0].clientX; // Position actuelle du doigt
-		const plank = game.plank;
-
-		if (lastTouchX !== null) {
-			const deltaX = touchX - lastTouchX; // Différence entre les positions actuelle et précédente
-
-			if (deltaX > 0) {
-				// Mouvement vers la droite
-				plank.startMotion('right');
-			} else if (deltaX < 0) {
-				// Mouvement vers la gauche
-				plank.startMotion('left');
-			}
-		}
-
-		lastTouchX = touchX; // Mettre à jour la position pour la prochaine détection
-	}
 
 	// Arrêter le mouvement lorsque le doigt est levé
-	canvas.addEventListener('touchend', () => {
+	document.addEventListener('touchend', () => {
 		game.plank.stopMotion();
 	});
 });
