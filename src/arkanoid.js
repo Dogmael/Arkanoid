@@ -529,6 +529,48 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 	});
+
+	// Gestion du tactile
+
+	let lastTouchX = null; // Pour stocker la dernière position horizontale du doigt
+
+	canvas.addEventListener('touchstart', (event) => {
+		// Initialiser la position initiale du toucher
+		lastTouchX = event.touches[0].clientX;
+	});
+
+	canvas.addEventListener('touchmove', (event) => {
+		handleTouchDirection(event, game);
+	});
+
+	canvas.addEventListener('touchend', () => {
+		// Réinitialiser la position après avoir levé le doigt
+		lastTouchX = null;
+	});
+
+	function handleTouchDirection(event, game) {
+		const touchX = event.touches[0].clientX; // Position actuelle du doigt
+		const plank = game.plank;
+
+		if (lastTouchX !== null) {
+			const deltaX = touchX - lastTouchX; // Différence entre les positions actuelle et précédente
+
+			if (deltaX > 0) {
+				// Mouvement vers la droite
+				plank.startMotion('right');
+			} else if (deltaX < 0) {
+				// Mouvement vers la gauche
+				plank.startMotion('left');
+			}
+		}
+
+		lastTouchX = touchX; // Mettre à jour la position pour la prochaine détection
+	}
+
+	// Arrêter le mouvement lorsque le doigt est levé
+	canvas.addEventListener('touchend', () => {
+		game.plank.stopMotion();
+	});
 });
 
 // Export for test
