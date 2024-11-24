@@ -555,6 +555,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			game.ball.x = game.plank.x + game.plank.width / 2;
 		}
 	});
+
+	document.addEventListener('touchend', (event) => {
+		event.preventDefault();
+	});
 });
 
 // Export for test
