@@ -372,10 +372,10 @@ class Game {
 
 		// Change ball direction
 		if (collisedBlock.x <= this.ball.x && this.ball.x <= collisedBlock.x + collisedBlock.width) { // Collision from above or bellow
-			this.ball.y -= this.ball.dy;
+			this.ball.y -= 2 * this.ball.dy;
 			this.ball.dy *= -1; // Correct ball position to be sure it's outside of block
 		} else { // Side collision
-			this.ball.x -= this.ball.dx;
+			this.ball.x -= 2 * this.ball.dx;
 			this.ball.dx *= -1; // Correct ball position to be sure it's outside of block
 		}
 
@@ -532,7 +532,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Gestion du tactile
 	document.addEventListener('touchstart', (event) => {
-		// disable scroll
 		event.preventDefault();
 
 		game.start();
