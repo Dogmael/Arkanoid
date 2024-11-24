@@ -22,7 +22,7 @@ html, body {
 }
 
 #text {
-    margin-top: 20%;
+    margin-top: 10vh;
     font-size: 3vh;
     text-align: center;
 }
@@ -58,7 +58,7 @@ html, body {
     display: block;
     margin: 0 auto;
     max-height: 50%;
-    max-width: 40%;
+    max-width: 65%;
 }
 
 /* For vertical devices */
@@ -70,7 +70,7 @@ html, body {
 
     #right-column {
         order: -1;
-        width: 100%;
+        width: 60%;
         text-align: center;
         height: 20vh;
     }
@@ -82,14 +82,28 @@ html, body {
     #left-column {
         display: none;
     }
+
+    #logo {
+        max-height: 40%;
+    }
     
     #text{
-        display: ruby;
+        margin-top: 2vh;
         font-size: 2.5vh;
+        display: flex; /* Pour créer une flexbox */
+        flex-wrap: wrap; /* Pour que les éléments enfants passent à la ligne si besoin */
+        gap: 5vw; /* Pour espacer les éléments enfants */
+        row-gap: 3vh;
+        justify-content: center; /* Pour centrer horizontalement les éléments enfants */
+    }
+
+    #text p {
+        margin: 0; /* Supprime les marges par défaut des paragraphes */
+        white-space: nowrap; /* Empêche le contenu de se diviser sur plusieurs lignes dans les paragraphes */
     }
 
     #arkanoid {
         /* on met la hauteur égale à celle de la ligne qui contient le canvas */
-        max-height: 80vh;
+        max-height: 70vh;
     }
 }
