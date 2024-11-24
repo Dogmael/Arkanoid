@@ -19,6 +19,7 @@ html, body {
     background-color: black;
     color: var(--red-cmyk);
     font-family: 'MyWebFont', Arial;
+    touch-action: none;
 }
 
 #text {
