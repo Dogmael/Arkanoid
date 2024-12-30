@@ -1,0 +1,13 @@
+{
+  "name": "arkanoid",
+  "description": "Rebuild Arkanoid in javascript using canvas for learning purpose",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dogmael",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^9.17.0",
+    "neostandard": "^0.12.0"
+  }
+}
