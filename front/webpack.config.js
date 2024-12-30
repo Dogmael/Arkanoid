@@ -37,11 +37,11 @@ export default {
 					compress: {
 						drop_console: true, // Supprime les console.log
 					},
-					mangle: {
-						properties: {
-							regex: /^[a-zA-Z_]/, // Minifie toutes les propriétés commençant par une lettre ou un underscore
-						},
-					},
+					// mangle: {
+					// 	properties: {
+					// 		regex: /^[a-zA-Z_]/, // Minifie toutes les propriétés commençant par une lettre ou un underscore
+					// 	},
+					// },
 					format: {
 						comments: false, // Supprime les commentaires
 					},

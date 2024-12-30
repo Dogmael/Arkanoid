@@ -326,8 +326,6 @@ class Game {
 
 			this.motion(this.map, this.plank);
 
-			console.log(this.ball.x);
-
 			this.map.draw(this.ctx);
 			this.ball.draw(this.ctx);
 			this.plank.draw(this.ctx, this.canvas.height);
