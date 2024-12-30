@@ -47,12 +47,12 @@ jobs:
           cd front
           npm run build
       
-      - name: Move HTML and CSS files to dist
-        run: |
-          cd front
-          mkdir -p dist
-          mv src/*.html dist/
-          mv src/*.css dist/
+      # - name: Move HTML and CSS files to dist
+      #   run: |
+      #     cd front
+      #     mkdir -p dist
+      #     mv src/*.html dist/
+      #     mv src/*.css dist/
 
       - name: Sync assets folder to dist using rsync
         run: |

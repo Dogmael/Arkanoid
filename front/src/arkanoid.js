@@ -1,6 +1,8 @@
 import { clamp } from './helpers.js';
 import levels from './assets/json/levels.json' with { type: 'json' };
-import blocksTypes from './assets/json/blocksTypes.json' with {type: 'json'};
+import blocksTypes from './assets/json/blocksTypes.json' with { type: 'json' };
+import './arkanoid.css';
+
 class Level {
 	constructor ({ levelNumber, ballSpeed, paddleWidthRation, paddleHeightRation, map }) {
 		this.levelNumber = levelNumber;
@@ -323,6 +325,8 @@ class Game {
 			}
 
 			this.motion(this.map, this.plank);
+
+			console.log(this.ball.x);
 
 			this.map.draw(this.ctx);
 			this.ball.draw(this.ctx);

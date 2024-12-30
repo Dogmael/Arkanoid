@@ -1,18 +1,18 @@
 import neostandard from 'neostandard'
 
 export default [
-  // Configuration personnalisée prioritaire
+  // Configuration importée de neostandard
   ...neostandard(),
+  // Configuration personnalisée prioritaire
   {
-    files: ['**/*.js'], // Applique cette configuration aux fichiers JS
-    ignores: ['node_modules/**'], // Ignore les dossiers spécifiques
+    files: ['**/*.js'],
     languageOptions: {
-      ecmaVersion: 'latest', // Version ECMAScript
-      sourceType: 'module',  // Spécifie les modules ES6
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: {
         jest: 'readonly',
-        test: 'readonly',
-        expect: 'readonly',
+        // test: 'readonly',
+        // expect: 'readonly',
       }
     },
     rules: {
@@ -21,5 +21,4 @@ export default [
       '@stylistic/no-tabs': 'off',
     },
   },
-  // Configuration importée de neostandard
 ]

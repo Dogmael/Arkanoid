@@ -1,0 +1,17 @@
+# Utiliser une image Node.js
+FROM node:18
+
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copier uniquement les fichiers de configuration (évite de copier "src" ici)
+COPY package*.json ./
+
+# Installer les dépendances
+RUN npm install
+
+# Exposer le port sur lequel le serveur de développement fonctionne
+EXPOSE 3000
+
+# Commande par défaut (assurez-vous que "start" est défini pour le mode dev dans package.json)
+CMD ["npm", "run", "start"]
