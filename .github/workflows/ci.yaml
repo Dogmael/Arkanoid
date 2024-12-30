@@ -31,7 +31,7 @@ jobs:
       - name: Run ESLint without autofix
         run: |
           cd front
-          npx eslint .
+          npx eslint@8.0.1 .
 
       - name: Run Jest tests
         run: |
