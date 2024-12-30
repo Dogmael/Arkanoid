@@ -41,7 +41,8 @@ export default {
 						properties: {
 							regex: /^[a-zA-Z_]/, // Minifie toutes les propriétés commençant par une lettre ou un underscore
 						},
-					  },					format: {
+					},
+					format: {
 						comments: false, // Supprime les commentaires
 					},
 				},
