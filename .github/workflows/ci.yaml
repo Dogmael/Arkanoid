@@ -1,0 +1,67 @@
+name: Lint, Test, Build, and Deploy
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  lint-test-build-deploy:
+    name: Lint with ESLint, Test with Jest, Build with Webpack, and Deploy for Front and Back
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      # FRONT-END WORKFLOW
+      - name: Set up Node.js for Front-end
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.9.0'
+
+      - name: Install dependencies for Front-end
+        run: |
+        cd front
+        npm install
+
+      - name: Run ESLint without autofix
+        run: |
+        cd front
+        npx eslint@8.0.1 .
+
+      - name: Run Jest tests
+        run: |
+        cd front
+        npm test
+
+      - name: Build with Webpack
+        run: |
+        cd front
+        npm run build
+      
+      - name: Move HTML and CSS files to dist
+        run: |
+          cd front
+          mkdir -p dist
+          mv src/*.html dist/
+          mv src/*.css dist/
+
+      - name: Sync assets folder to dist using rsync
+        run: |
+          cd front
+          mkdir -p dist/assets
+          rsync -av src/assets/ dist/assets/
+
+      # ADD BACK-END WORKFLOW
+
+      # ADAPT DEPLOY TO GOOGLE CLOUD RUN
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./front/dist
