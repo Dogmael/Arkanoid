@@ -9,11 +9,6 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: {
-        jest: 'readonly',
-        // test: 'readonly',
-        // expect: 'readonly',
-      }
     },
     rules: {
       '@stylistic/indent': ['error', 'tab'],

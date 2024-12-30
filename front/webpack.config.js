@@ -8,6 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
+	mode: 'production',
 	entry: './src/arkanoid.js',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
@@ -31,7 +32,18 @@ export default {
 	},
 	optimization: {
 		minimizer: [
-			new TerserPlugin()
+			new TerserPlugin({
+				terserOptions: {
+					compress: {
+						drop_console: true, // Supprime les console.log
+					},
+					mangle: true, // Réduit les noms de variables/classes
+					format: {
+						comments: false, // Supprime les commentaires
+					},
+				},
+				extractComments: false, // Supprime les fichiers de commentaires séparés
+			}),
 		]
 	},
 	plugins: [
