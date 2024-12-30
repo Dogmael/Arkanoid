@@ -23,6 +23,10 @@ jobs:
         with:
           node-version: '22.9.0'
 
+      - name: Install dependencies for root folder
+        run: |
+          npm install
+
       - name: Install dependencies for Front-end
         run: |
           cd front
