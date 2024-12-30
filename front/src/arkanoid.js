@@ -433,7 +433,7 @@ class Game {
 			const yDist = Math.abs((block.y + block.height / 2) - ballPosition.y);
 			const distToRectangle = Math.sqrt(xDist ** 2 + yDist ** 2);
 
-			distsToRectangle.push({ distToRectangle: distToRectangle, block: block });
+			distsToRectangle.push({ distToRectangle, block });
 		}
 
 		const colestBlock = distsToRectangle.reduce((prev, curr) => (curr.distToRectangle < prev.distToRectangle) ? curr : prev).block;
