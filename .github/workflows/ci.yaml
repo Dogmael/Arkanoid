@@ -25,23 +25,23 @@ jobs:
 
       - name: Install dependencies for Front-end
         run: |
-        cd front
-        npm install
+          cd front
+          npm install
 
       - name: Run ESLint without autofix
         run: |
-        cd front
-        npx eslint@8.0.1 .
+          cd front
+          npx eslint@8.0.1 .
 
       - name: Run Jest tests
         run: |
-        cd front
-        npm test
+          cd front
+          npm test
 
       - name: Build with Webpack
         run: |
-        cd front
-        npm run build
+          cd front
+          npm run build
       
       - name: Move HTML and CSS files to dist
         run: |
