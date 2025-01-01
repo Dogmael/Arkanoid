@@ -29,7 +29,9 @@
   "type": "module",
   "scripts": {
     "test": "jest",
-    "build": "webpack --mode production",
-    "start": "webpack serve --mode development --host 0.0.0.0 --port 3000"
+    "serve:dev": "webpack serve --env serve=dev",
+    "serve:prod": "webpack --mode production && webpack serve --env serve=prod",
+    "build:prod": "webpack --mode production",
+    "build:dev": "webpack --mode development"
   }
 }

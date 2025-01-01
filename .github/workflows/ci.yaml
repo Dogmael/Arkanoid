@@ -45,7 +45,7 @@ jobs:
       - name: Build with Webpack
         run: |
           cd front
-          npm run build
+          npm run build:prod
       
       # - name: Move HTML and CSS files to dist
       #   run: |

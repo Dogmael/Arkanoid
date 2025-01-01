@@ -7,70 +7,75 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default {
-	mode: 'production',
-	entry: './src/arkanoid.js',
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'arkanoid.js'
-	},
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-			},
-			{
-				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, 'css-loader']
-			},
-			{
-				test: /\.json$/,
-				type: 'json' // Permet le chargement de fichiers JSON
-			}
-		]
-	},
-	optimization: {
-		minimizer: [
-			new TerserPlugin({
-				terserOptions: {
-					compress: {
-						drop_console: true, // Supprime les console.log
-					},
-					// mangle: {
-					// 	properties: {
-					// 		regex: /^[a-zA-Z_]/, // Minifie toutes les propriétés commençant par une lettre ou un underscore
-					// 	},
-					// },
-					format: {
-						comments: false, // Supprime les commentaires
-					},
+export default (env) => {
+	const isProd = env.serve === 'prod'; // Passez "prod" ou "dev" via la ligne de commande
+	const serveDirectory = isProd ? 'dist' : 'src';
+
+	return {
+		mode: isProd ? 'production' : 'development',
+		entry: './src/arkanoid.js',
+		output: {
+			path: path.resolve(__dirname, 'dist'),
+			filename: 'arkanoid.js'
+		},
+		module: {
+			rules: [
+				{
+					test: /\.js$/,
+					exclude: /node_modules/,
 				},
-				extractComments: false, // Supprime les fichiers de commentaires séparés
+				{
+					test: /\.css$/,
+					use: [MiniCssExtractPlugin.loader, 'css-loader']
+				},
+				{
+					test: /\.json$/,
+					type: 'json'
+				}
+			]
+		},
+		optimization: {
+			minimizer: [
+				new TerserPlugin({
+					terserOptions: {
+						compress: {
+							drop_console: true, // Supprime les console.log
+						},
+						// mangle: { // Pas compatible avec l'accès aux propriétés par clé (ex: obj['prop'])
+						// 	properties: {
+						// 		regex: /^[a-zA-Z_]/, // Minifie toutes les propriétés commençant par une lettre ou un underscore
+						// 	},
+						// },
+						format: {
+							comments: false, // Supprime les commentaires
+						},
+					},
+					extractComments: false, // Supprime les fichiers de commentaires séparés
+				}),
+			]
+		},
+		plugins: [
+			new HtmlWebpackPlugin({
+				template: path.resolve(__dirname, 'src', 'arkanoid.html'),
+				filename: 'arkanoid.html',
+				inject: false, // Désactive l'injection automatique des scripts, EVITE D AVOIR DEUX SCRIPT JS EXECUTE EN PARALELLE
 			}),
-		]
-	},
-	plugins: [
-		new HtmlWebpackPlugin({
-			template: path.resolve(__dirname, 'src', 'arkanoid.html'), // Utilise un chemin absolu
-			filename: 'arkanoid.html',
-			inject: false, // Désactive l'injection automatique des scripts
-		}),
-		new MiniCssExtractPlugin({
-			filename: 'arkanoid.css' // Nom du fichier CSS dans `dist`
-		})
-	],
-	resolve: {
-		extensions: ['.js']
-	},
-	devServer: {
-		static: {
-			directory: __dirname + '/dist', // Dossier à servir
+			new MiniCssExtractPlugin({
+				filename: 'arkanoid.css'
+			})
+		],
+		resolve: {
+			extensions: ['.js']
 		},
-		port: 3000, // Port sur lequel le serveur est lancé
-		open: true, // Ouvre automatiquement le navigateur
-		historyApiFallback: {
-			index: 'arkanoid.html', // ouvre automatiquement la bonne page plutôt que le dossier
+		devServer: {
+			static: {
+				directory: path.resolve(__dirname, serveDirectory), // Dynamique selon l'environnement
+			},
+			port: 3000,
+			open: true,
+			historyApiFallback: {
+				index: 'arkanoid.html',
+			},
 		},
-	},
+	};
 };
