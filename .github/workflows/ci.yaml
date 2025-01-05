@@ -29,34 +29,34 @@ jobs:
 
       - name: Install dependencies for Front-end
         run: |
-          cd front
+          cd frontend
           npm install
 
       - name: Run ESLint without autofix
         run: |
-          cd front
+          cd frontend
           npx eslint .
 
       - name: Run Jest tests
         run: |
-          cd front
+          cd frontend
           npm test
 
       - name: Build with Webpack
         run: |
-          cd front
+          cd frontend
           npm run build:prod
       
       # - name: Move HTML and CSS files to dist
       #   run: |
-      #     cd front
+      #     cd frontend
       #     mkdir -p dist
       #     mv src/*.html dist/
       #     mv src/*.css dist/
 
       - name: Sync assets folder to dist using rsync
         run: |
-          cd front
+          cd frontend
           mkdir -p dist/assets
           rsync -av src/assets/ dist/assets/
 
