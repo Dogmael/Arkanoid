@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import { addUserHandler } from '../controllers/userController';
+import { addUserHandler } from '../controllers/usersController';
 
 export default async function userRoutes(fastify: FastifyInstance) {
- fastify.post('/user', addUserHandler);
+    fastify.post('/users', addUserHandler);
 }

@@ -1,19 +1,14 @@
 import Fastify from 'fastify';
-import prisma from './prisma';
+import prismaPlugin from './plugins/prismaPlugin';
+import usersRoute from './routes/usersRoute';
 
 const fastify = Fastify({ logger: true });
 
-// Sample route
-fastify.get('/', async (request, reply) => {
-  return { message: 'Welcome to Fastify with TypeScript!' };
-});
-fastify.post('/user', async (request, reply) => {
-    const { email, name, bestScore } = request.body as { email: string; name?: string; bestScore: number };
-    const product = await prisma.user.create({
-      data: { email, name, bestScore },
-    });
-    return { data: product };
-  });
+// Register plugins
+fastify.register(prismaPlugin);
+
+// Register routes
+fastify.register(usersRoute);
 
 // Start the server
 const start = async () => {
