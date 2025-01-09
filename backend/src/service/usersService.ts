@@ -6,10 +6,21 @@ export async function addUser(user: any) {
     return await prisma.user.create({ data: user });
 }
 
-export async function deleteUser(email: any) {
+export async function deleteUser(email: string) {
     return await prisma.user.delete({
         where: {
             email: email
+        }
+    })
+}
+
+export async function updateBestScore(email: string, bestScore: number) {
+    return await prisma.user.update({
+        where : {
+            email: email
+        },
+        data: {
+            bestScore: bestScore
         }
     })
 }
