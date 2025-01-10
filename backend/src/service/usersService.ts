@@ -24,3 +24,16 @@ export async function updateBestScore(email: string, bestScore: number) {
         }
     })
 }
+
+export async function getLeaderBoard() {
+    return await prisma.user.findMany({
+        orderBy: {
+            bestScore: 'desc',
+        },
+        take: 10,
+        select : {
+            name : true,
+            bestScore : true   
+        }
+    })
+}
