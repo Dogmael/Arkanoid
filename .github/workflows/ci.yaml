@@ -18,50 +18,50 @@ jobs:
         uses: actions/checkout@v3
       
       # PROJECT SET UP
-      - name: Set up Node.js for project
+      - name: "Project : Set up Node.js"
         uses: actions/setup-node@v3
         with:
           node-version: '22.9.0'
 
-      - name: Install dependencies for project
+      - name: "Project : Install dependencies for project"
         run: |
           npm install
 
       # FRONT-END WORKFLOW
-      - name: Install dependencies for Front-end
+      - name: "Front-end : Install dependencies"
         run: |
           cd frontend
           npm install
 
-      - name: Run ESLint without autofix
+      - name: "Front-end : Run ESLint without autofix"
         run: |
           cd frontend
           npx eslint .
 
-      - name: Run Jest tests
+      - name: "Front-end : Run Jest tests"
         run: |
           cd frontend
           npm test
 
-      - name: Build with Webpack
+      - name: "Front-end : Build with Webpack"
         run: |
           cd frontend
           mkdir -p dist
           npm run build:prod
 
-      - name: Sync assets folder to dist using rsync
+      - name: "Front-end : Sync assets folder to dist using rsync"
         run: |
           cd frontend
           mkdir -p dist/assets
           rsync -av src/assets/ dist/assets/
 
       # BACK-END WORKFLOW
-      - name : Install dependencies for back-end
+      - name : "Back-end : Install dependencies"
         run: |
           cd backend
           npm install
 
-      - name: Run ESLint without autofix
+      - name: "Back-end : Run ESLint without autofix"
         run: |
           cd backend
           npx eslint .

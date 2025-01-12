@@ -13,19 +13,18 @@
 
 // export { prisma };
 
-
 // src/plugins/prismaPlugin.ts
 import fp from 'fastify-plugin';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export default fp(async function prismaPlugin(fastify) {
-  fastify.decorate('prisma', prisma);
+export default fp(async function prismaPlugin (fastify) {
+	fastify.decorate('prisma', prisma);
 
-  fastify.addHook('onClose', async () => {
-    await prisma.$disconnect();
-  });
+	fastify.addHook('onClose', async () => {
+		await prisma.$disconnect();
+	});
 });
 
 // Export direct pour l'utiliser dans d'autres fichiers
