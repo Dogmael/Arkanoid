@@ -1,11 +1,11 @@
 import neostandard from 'neostandard'
 
 export default [
-  // Configuration importée de neostandard
-  ...neostandard(),
-  // Configuration personnalisée prioritaire
+  // Configuration importée de neostandard avec TypeScript activé
+  ...neostandard({ ts: true }),
+  // Configuration personnalisée prioritaire pour JavaScript et TypeScript
   {
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.ts'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -14,6 +14,6 @@ export default [
       '@stylistic/indent': ['error', 'tab'],
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/no-tabs': 'off',
-    },
+    }
   },
 ]
