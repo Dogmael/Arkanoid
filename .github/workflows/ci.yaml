@@ -16,17 +16,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
-      # FRONT-END WORKFLOW
-      - name: Set up Node.js for Front-end
+      
+      # PROJECT SET UP
+      - name: Set up Node.js for project
         uses: actions/setup-node@v3
         with:
           node-version: '22.9.0'
 
-      - name: Install dependencies for root folder
+      - name: Install dependencies for project
         run: |
           npm install
 
+      # FRONT-END WORKFLOW
       - name: Install dependencies for Front-end
         run: |
           cd frontend
@@ -47,13 +48,6 @@ jobs:
           cd frontend
           mkdir -p dist
           npm run build:prod
-      
-      # - name: Move HTML and CSS files to dist
-      #   run: |
-      #     cd frontend
-      #     mkdir -p dist
-      #     mv src/*.html dist/
-      #     mv src/*.css dist/
 
       - name: Sync assets folder to dist using rsync
         run: |
@@ -61,10 +55,18 @@ jobs:
           mkdir -p dist/assets
           rsync -av src/assets/ dist/assets/
 
-      # ADD BACK-END WORKFLOW
+      # BACK-END WORKFLOW
+      - name : Install dependencies for back-end
+        run: |
+          cd backend
+          npm install
 
-      # ADAPT DEPLOY TO GOOGLE CLOUD RUN
+      - name: Run ESLint without autofix
+        run: |
+          cd backend
+          npx eslint .
 
+      # DEPLOYMENT
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
