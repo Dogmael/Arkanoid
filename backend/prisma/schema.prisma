@@ -7,9 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  pk_user    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  bestScore Int
+model user {
+  userId    Int      @id @default(autoincrement()) @map("user_id")
+  email     String   @unique
+  pseudo    String   @unique
+  bestScore Int      @default(0) @map("best_score")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }

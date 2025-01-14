@@ -32,7 +32,7 @@ export async function getLeaderBoard () {
 		},
 		take: 10,
 		select: {
-			name: true,
+			pseudo: true,
 			bestScore: true
 		}
 	});
