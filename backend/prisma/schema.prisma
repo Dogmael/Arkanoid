@@ -8,9 +8,9 @@ datasource db {
 }
 
 model user {
-  userId    Int      @id @default(autoincrement()) @map("user_id")
+  pkUser    Int      @id @default(autoincrement()) @map("pk_user")
+  userName  String   @unique @map("user_name")
   email     String   @unique
-  pseudo    String   @unique
   bestScore Int      @default(0) @map("best_score")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

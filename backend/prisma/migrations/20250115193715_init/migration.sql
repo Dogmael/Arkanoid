@@ -1,17 +1,17 @@
 -- CreateTable
 CREATE TABLE "user" (
-    "user_id" SERIAL NOT NULL,
+    "pk_user" SERIAL NOT NULL,
+    "user_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "pseudo" TEXT NOT NULL,
     "best_score" INTEGER NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "user_pkey" PRIMARY KEY ("user_id")
+    CONSTRAINT "user_pkey" PRIMARY KEY ("pk_user")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
+CREATE UNIQUE INDEX "user_user_name_key" ON "user"("user_name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_pseudo_key" ON "user"("pseudo");
+CREATE UNIQUE INDEX "user_email_key" ON "user"("email");

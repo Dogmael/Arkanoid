@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { addUser, deleteUser, updateBestScore, getLeaderBoard } from '../service/usersService';
+import { addUser, deleteUser, getLeaderBoard, updateBestScore } from '../service/usersService';
 
 // Contrôleur : Logique métier
 // On appel pas l'ORM d'ici mais on appel le service qui va appeler l'ORM
@@ -10,22 +10,22 @@ export async function addUserHandler (request: FastifyRequest, reply: FastifyRep
 	reply.status(201).send(result); // 201 : Create
 }
 
-type emailParamsType = { email: string }; // Utiliser un interface plutôt ?
+type userNameParamsType = { userName: string }; // Utiliser un interface plutôt ?
 
-export async function deleteUserHandler (request: FastifyRequest<{ Params: emailParamsType }>, reply: FastifyReply) {
-	const { email } = request.params;
-	await deleteUser(email);
+export async function deleteUserHandler (request: FastifyRequest<{ Params: userNameParamsType }>, reply: FastifyReply) {
+	const { userName } = request.params;
+	await deleteUser(userName);
 	reply.status(204); // 204 : No Content to return, successful response
 }
 
 type updateBestScoreParamsType = {
-	email: string,
+	userName: string,
 	bestScore: number
 };
 
-export async function updateBestScoreHandler (request: FastifyRequest<{ Params: updateBestScoreParamsType }>, reply : FastifyReply) {
-	const { email, bestScore } = request.params;
-	await updateBestScore(email, bestScore);
+export async function updateBestScoreHandler (request: FastifyRequest<{ Params: updateBestScoreParamsType }>, reply: FastifyReply) {
+	const { userName, bestScore } = request.params;
+	await updateBestScore(userName, bestScore);
 	reply.status(204); // 204 : No Content successful response
 }
 

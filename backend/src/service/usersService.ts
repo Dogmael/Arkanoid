@@ -6,18 +6,18 @@ export async function addUser (user: any) {
 	return await prisma.user.create({ data: user });
 }
 
-export async function deleteUser (email: string) {
+export async function deleteUser (userName: string) {
 	return await prisma.user.delete({
 		where: {
-			email
+			userName
 		}
 	});
 }
 
-export async function updateBestScore (email: string, bestScore: number) {
+export async function updateBestScore (userName: string, bestScore: number) {
 	return await prisma.user.update({
 		where: {
-			email
+			userName
 		},
 		data: {
 			bestScore
@@ -32,7 +32,7 @@ export async function getLeaderBoard () {
 		},
 		take: 10,
 		select: {
-			pseudo: true,
+			userName: true,
 			bestScore: true
 		}
 	});
