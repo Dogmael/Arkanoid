@@ -14,9 +14,9 @@ export const addUserSchema = {
 		type: 'object',
 		properties: {
 			userName: { type: 'string' },
-			pseudo: { type: 'string' },
+			email: { type: 'string' },
 			bestScore: { type: 'number' }, // Pertinent pour une création d'utilisateur ?
 		}
 	},
-	required: ['userName', 'pseudo'],
+	required: ['userName', 'email'],
 };
