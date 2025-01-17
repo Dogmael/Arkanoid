@@ -66,6 +66,11 @@ jobs:
           cd backend
           npx eslint .
 
+      - name: "Back-end : Run API Tests"
+        run: |
+          cd backend
+          npm run test
+
       # DEPLOYMENT
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
