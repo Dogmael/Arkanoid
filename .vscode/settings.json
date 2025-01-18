@@ -1,0 +1,10 @@
+{
+    "jest.jestCommandLine": "npm test --",
+    "jest.rootPath": ".",
+    "jest.runMode": {
+        "type": "watch",
+        "runAllTestsOnStartup": true
+    },
+    "jest.enableInlineErrorMessages": true,
+    "jest.autoRevealOutput": "on-exec-error"
+}
