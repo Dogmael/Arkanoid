@@ -2,7 +2,7 @@ export const updateBestScoreSchema = {
 	params: {
 		type: 'object',
 		properties: {
-			userName: { type: 'string' }, // typeScript userName type ?
+			userName: { type: 'string' },
 			bestScore: { type: 'number' },
 		},
 		required: ['userName', 'bestScore'],
@@ -10,13 +10,13 @@ export const updateBestScoreSchema = {
 };
 
 export const addUserSchema = {
-	params: {
+	body: {
 		type: 'object',
 		properties: {
 			userName: { type: 'string' },
 			email: { type: 'string' },
-			bestScore: { type: 'number' }, // Pertinent pour une création d'utilisateur ?
-		}
-	},
-	required: ['userName', 'email'],
+			bestScore: { type: 'number' },
+		},
+		required: ['userName', 'email']
+	}
 };
