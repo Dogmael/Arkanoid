@@ -10,6 +10,21 @@ jobs:
     name: Lint with ESLint, Test with Jest, Build with Webpack, and Deploy for Front and Back
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     permissions:
       contents: write
 
@@ -69,7 +84,7 @@ jobs:
       - name: "Back-end : Run API Tests"
         run: |
           cd backend
-          npm run test
+          DATABASE_URL="postgresql://test:test@localhost:5433/testdb?schema=public" npm test
 
       # DEPLOYMENT
       - name: Deploy to GitHub Pages
