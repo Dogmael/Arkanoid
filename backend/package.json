@@ -6,9 +6,7 @@
   "scripts": {
     "start:dev": "tsx src/serveur.ts",
     "migrate": "prisma migrate dev",
-    "resetTestDB": "dotenv -e .env.test -- npx prisma migrate reset --force",
-    "jest": "dotenv -e .env.test -- jest",
-    "test": "npm run resetTestDB && npm run jest"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
