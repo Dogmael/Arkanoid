@@ -4,13 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "npx tsx src/serveur.ts",
-    "migrate": "npx prisma migrate dev",
-    "docker:run": "docker run --name postgres-test -e POSTGRES_USER=test -e POSTGRES_PASSWORD=test -e POSTGRES_DB=testdb -p 5433:5432 -d postgres",
-    "docker:stop": "docker stop postgres-test && docker rm postgres-test",
-    "migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
-    "test:setup": "npm run docker:run && npm run migrate:test",
-    "test": "npm run test:setup && (dotenv -e .env.test -- jest || (echo 'Tests failed, stopping Docker container...' && npm run docker:stop; exit 1)) && npm run docker:stop"
+    "start:dev": "tsx src/serveur.ts",
+    "migrate": "prisma migrate dev",
+    "resetTestDB": "dotenv -e .env.test -- npx prisma migrate reset --force",
+    "jest": "dotenv -e .env.test -- jest",
+    "test": "npm run resetTestDB && npm run jest"
   },
   "keywords": [],
   "author": "",
