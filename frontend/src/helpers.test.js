@@ -1,17 +1,44 @@
 import { clamp } from './helpers.js';
 
-const values = [
-	{ x: 4, a: 5, b: 10, expectedResult: 5 },
-	{ x: 0, a: -1, b: 10, expectedResult: 0 },
-	{ x: -4.5, a: -0.21, b: 10, expectedResult: -0.21 },
-	{ x: 1000.02, a: 5, b: 55, expectedResult: 55 }
-];
+describe('helpers', () => {
+	describe('clamp()', () => {
+		const testCases = [
+			{
+				description: 'should clamp value to minimum when below range',
+				x: 4,
+				min: 5,
+				max: 10,
+				expected: 5
+			},
+			{
+				description: 'should keep value when within range',
+				x: 0,
+				min: -1,
+				max: 10,
+				expected: 0
+			},
+			{
+				description: 'should clamp value to minimum with decimal numbers',
+				x: -4.5,
+				min: -0.21,
+				max: 10,
+				expected: -0.21
+			},
+			{
+				description: 'should clamp value to maximum when above range',
+				x: 1000.02,
+				min: 5,
+				max: 55,
+				expected: 55
+			}
+		];
 
-test.each(values)(
-	'Test clamp function',
-	({ x, a, b, expectedResult }) => {
-		const result = clamp(x, a, b);
-
-		expect(result).toBe(expectedResult);
-	}
-);
+		test.each(testCases)(
+			'$description',
+			({ x, min, max, expected }) => {
+				const result = clamp(x, min, max);
+				expect(result).toBe(expected);
+			}
+		);
+	});
+});
