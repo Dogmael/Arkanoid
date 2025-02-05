@@ -5,11 +5,11 @@ FROM node:18
 WORKDIR /app
 
 # Installer les dépendances
-COPY package-lock.json ./
+COPY package*.json ./
 RUN npm install
 
 # Exposer le port sur lequel le serveur de développement fonctionne
 EXPOSE 3000
 
 # Commande par défaut (assurez-vous que "start" est défini pour le mode dev dans package.json)
-CMD ["npm", "run", "webpack serve --env serve=dev"]
+CMD ["npm", "run", "serve:dev"]
