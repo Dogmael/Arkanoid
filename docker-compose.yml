@@ -1,0 +1,23 @@
+
+services: 
+  backend:
+    build:
+      context: .
+      dockerfile: backend/docker/dockerfile.dev
+    container_name: arkanoid_back
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/docker/dockerfile.dev
+    container_name: arkanoid_front
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./frontend:/app
