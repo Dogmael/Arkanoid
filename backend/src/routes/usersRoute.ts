@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import { addUserHandler, deleteUserHandler, getLeaderBoardHandler, updateBestScoreHandler } from '../controllers/usersController.js';
-import { addUserSchema, updateBestScoreSchema } from '../schemas/usersSchema.js';
+import { addUserHandler, deleteUserHandler, getLeaderBoardHandler, updateBestScoreHandler } from '../controllers/usersController';
+import { addUserSchema, updateBestScoreSchema } from '../schemas/usersSchema';
 
 export default async function userRoutes (fastify: FastifyInstance) {
 	fastify.post('/users', { schema: addUserSchema }, addUserHandler);

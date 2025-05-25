@@ -1,5 +1,5 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { prisma } from '../plugins/prismaPlugin.js';
+import { prisma } from '../plugins/prismaPlugin';
 // Contains business logic, separated from controllers to keep them slim and reusable.
 
 export async function checkUserNameExists (userName: string): Promise<boolean> {

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { addUser, checkEmailExists, checkUserNameExists, deleteUser, getLeaderBoard, updateBestScore } from '../service/usersService.js';
+import { addUser, checkEmailExists, checkUserNameExists, deleteUser, getLeaderBoard, updateBestScore } from '../service/usersService';
 
 interface AddUserBody {
 	userName: string;

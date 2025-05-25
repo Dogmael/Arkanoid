@@ -1,6 +1,6 @@
 import Fastify, { FastifyServerOptions } from 'fastify';
-import prismaPlugin from './plugins/prismaPlugin.js';
-import usersRoute from './routes/usersRoute.js';
+import prismaPlugin from './plugins/prismaPlugin';
+import usersRoute from './routes/usersRoute';
 
 export default function buildApp (options: FastifyServerOptions = {}) {
 	const fastify = Fastify(options);
