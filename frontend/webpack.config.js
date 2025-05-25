@@ -1,8 +1,8 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import TerserPlugin from 'terser-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import path from 'path';
+import TerserPlugin from 'terser-webpack-plugin';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,7 +71,7 @@ export default (env) => {
 			static: {
 				directory: path.resolve(__dirname, serveDirectory), // Dynamique selon l'environnement
 			},
-			port: 3000,
+			port: 8080,
 			open: true,
 			historyApiFallback: {
 				index: 'arkanoid.html',

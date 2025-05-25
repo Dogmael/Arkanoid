@@ -4,7 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "tsx src/serveur.ts",
+    "start:dev": "npm run build && npm run start",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/serveur.js",
     "migrate": "prisma migrate dev",
     "test": "jest"
   },
@@ -33,7 +35,6 @@
     "prisma": "^6.1.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
 }

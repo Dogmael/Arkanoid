@@ -1,6 +1,5 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '../plugins/prismaPlugin';
-
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { prisma } from '../plugins/prismaPlugin.js';
 // Contains business logic, separated from controllers to keep them slim and reusable.
 
 export async function checkUserNameExists (userName: string): Promise<boolean> {
@@ -21,7 +20,7 @@ export async function addUser (user: any) {
 	try {
 		return await prisma.user.create({ data: user });
 	} catch (error) {
-		if (error instanceof Prisma.PrismaClientKnownRequestError) {
+		if (error instanceof PrismaClientKnownRequestError) {
 			if (error.code === 'P2002') {
 				const target = error.meta?.target as string[];
 				if (target?.includes('userName')) {
@@ -43,7 +42,7 @@ export async function deleteUser (userName: string) {
 			}
 		});
 	} catch (error) {
-		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+		if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
 			throw new Error('USER_NOT_FOUND');
 		}
 		throw error;
@@ -61,7 +60,7 @@ export async function updateBestScore (userName: string, bestScore: number) {
 			}
 		});
 	} catch (error) {
-		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+		if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
 			throw new Error('USER_NOT_FOUND');
 		}
 		throw error;

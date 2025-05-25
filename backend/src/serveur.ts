@@ -1,4 +1,4 @@
-import buildApp from './app';
+import buildApp from './app.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -18,7 +18,10 @@ const server = buildApp({
 		},
 });
 
-server.listen({ port: 3000 }, (err, address) => {
+server.listen({ 
+	port: 3000,
+	host: '0.0.0.0',
+}, (err, address) => {
 	if (err) {
 		server.log.error(err);
 		process.exit(1);

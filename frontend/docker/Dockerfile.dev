@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm install
 
 # Exposer le port sur lequel le serveur de développement fonctionne
-EXPOSE 3000
+EXPOSE 8080
 
 # Commande par défaut (assurez-vous que "start" est défini pour le mode dev dans package.json)
 CMD ["npm", "run", "serve:dev"]
