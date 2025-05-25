@@ -3,7 +3,7 @@ import baseConfig from '../eslint.config.mjs';
 export default [
 	...baseConfig,
 	{
-		files: ['**/*.js'],
+		files: ['**/*.js', '**/*.mjs',],
 		languageOptions: {
 			ecmaVersion: 'latest',
 			sourceType: 'module',
