@@ -2,7 +2,7 @@
   "name": "back",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "commonjs", 
   "scripts": {
     "start:dev": "npm run build && npm run start",
     "start:dev-watch": "nodemon --watch src --ext ts --exec ts-node src/serveur.ts",

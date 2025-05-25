@@ -1,4 +1,4 @@
-import backendConfig from './backend/jest.config.js';
+import backendConfig from './backend/jest.config.mjs';
 import frontendConfig from './frontend/jest.config.js';
 
 export default {

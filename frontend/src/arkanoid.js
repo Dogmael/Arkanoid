@@ -1,7 +1,7 @@
-import { clamp } from './helpers.js';
-import levels from './assets/json/levels.json' with { type: 'json' };
-import blocksTypes from './assets/json/blocksTypes.json' with { type: 'json' };
 import './arkanoid.css';
+import blocksTypes from './assets/json/blocksTypes.json' with { type: 'json' };
+import levels from './assets/json/levels.json' with { type: 'json' };
+import { clamp } from './helpers.js';
 
 class Level {
 	constructor ({ levelNumber, ballSpeed, paddleWidthRation, paddleHeightRation, map }) {
@@ -563,4 +563,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for test
-export { Game, Plank, Ball };
+export { Ball, Game, Plank };

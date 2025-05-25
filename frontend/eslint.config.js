@@ -1,10 +1,9 @@
-import baseConfig from '../eslint.config.mjs';
 import globals from 'globals';
+import baseConfig from '../eslint.config.mjs';
 
 export default [
-	// Configuration de base héritée de baseConfig
+	// Configuration de base héritée
 	...baseConfig,
-	// Configuration additionnelle pour les fichiers locaux
 	{
 		files: ['**/*.js'],
 		languageOptions: {
@@ -12,9 +11,12 @@ export default [
 			sourceType: 'module',
 			globals: {
 				...globals.browser,
-				...globals.mocha,
+				...globals.node,
 				...globals.jest,
 			},
 		}
 	},
+	{
+		ignores: ['dist/**', 'node_modules/**'],
+	}
 ];
