@@ -2,7 +2,7 @@
   "name": "back",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "commonjs", 
+  "type": "commonjs",
   "scripts": {
     "start:dev": "npm run build && npm run start",
     "start:dev-watch": "nodemon --watch src --ext ts --exec ts-node src/serveur.ts",
@@ -16,6 +16,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
     "@fastify/helmet": "^13.0.1",
     "@fastify/jwt": "^9.0.2",
     "@fastify/rate-limit": "^10.2.1",
