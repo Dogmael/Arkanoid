@@ -8,7 +8,8 @@
 }
 
 /* Styles globaux */
-html, body {
+html,
+body {
     height: 100%;
     width: 100%;
     margin: 0;
@@ -64,7 +65,9 @@ html, body {
 
 /* For vertical devices */
 @media (max-aspect-ratio: 4/3) {
-    html, body {
+
+    html,
+    body {
         flex-direction: column;
         align-items: center;
     }
@@ -87,20 +90,26 @@ html, body {
     #logo {
         max-height: 40%;
     }
-    
-    #text{
+
+    #text {
         margin-top: 2vh;
         font-size: 2.5vh;
-        display: flex; /* Pour créer une flexbox */
-        flex-wrap: wrap; /* Pour que les éléments enfants passent à la ligne si besoin */
-        gap: 5vw; /* Pour espacer les éléments enfants */
+        display: flex;
+        /* Pour créer une flexbox */
+        flex-wrap: wrap;
+        /* Pour que les éléments enfants passent à la ligne si besoin */
+        gap: 5vw;
+        /* Pour espacer les éléments enfants */
         row-gap: 3vh;
-        justify-content: center; /* Pour centrer horizontalement les éléments enfants */
+        justify-content: center;
+        /* Pour centrer horizontalement les éléments enfants */
     }
 
     #text p {
-        margin: 0; /* Supprime les marges par défaut des paragraphes */
-        white-space: nowrap; /* Empêche le contenu de se diviser sur plusieurs lignes dans les paragraphes */
+        margin: 0;
+        /* Supprime les marges par défaut des paragraphes */
+        white-space: nowrap;
+        /* Empêche le contenu de se diviser sur plusieurs lignes dans les paragraphes */
     }
 
     #arkanoid {
