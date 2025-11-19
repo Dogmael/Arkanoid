@@ -1,0 +1,48 @@
+:root {
+    --red-cmyk: #FF102Aff;
+    --magic-mint: #adefd0;
+}
+
+@font-face {
+    font-family: 'MyWebFont';
+    src: url('assets/fonts/pixel.woff') format('woff');
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: var(--magic-mint);
+    font-family: 'MyWebFont', Arial;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+caption {
+    text-decoration: underline;
+    text-decoration-thickness: 0.35em;
+    margin-bottom: 10vh;
+}
+
+table {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+tr {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    gap: 3vw;
+}
+
+thead {
+    margin-bottom: 3vh;
+}
