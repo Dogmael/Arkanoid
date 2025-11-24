@@ -4,6 +4,7 @@
 <head>
     <title>Arkanoid</title>
     <link rel="stylesheet" type="text/css" href="leaderboard.css">
+    <script type="module" src="leaderboard.js"></script>
 </head>
 
 <body>
@@ -17,20 +18,17 @@
             <th>NAME</th>
         </thead>
         <tbody>
-            <tr>
-                <td>1ST</td>
-                <td>1000</td>
-                <td>BOB</td>
-            </tr>
-            <tr>
-                <td>2ND</td>
-                <td>850</td>
-                <td>JWC</td>
-            </tr>
+            <!-- Will be completed by JS with template -->
         </tbody>
     </table>
 
-    <script type="module" src="leaderboard.js"></script>
+    <template id="leader-row">
+        <tr>
+            <td id="rank"></td>
+            <td id="best-score"></td>
+            <td id="user-name"></td>
+        </tr>
+    </template>
 </body>
 
 </html>
