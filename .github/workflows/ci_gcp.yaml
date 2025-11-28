@@ -1,0 +1,104 @@
+name: Lint, Test, Build, and Deploy
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  lint-test-build-deploy:
+    name: Lint with ESLint, Test with Jest, Build with Webpack, and Deploy for Front and Back
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports :
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      
+      # PROJECT SET UP
+      - name: "Project : Set up Node.js"
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.9.0'
+
+      - name: "Project : Install dependencies for project"
+        run: |
+          npm install
+
+      # FRONT-END WORKFLOW
+      - name: "Front-end : Install dependencies"
+        run: |
+          cd frontend
+          npm install
+
+      - name: "Front-end : Run ESLint without autofix"
+        run: |
+          cd frontend
+          npx eslint .
+
+      - name: "Front-end : Run Jest tests"
+        run: |
+          cd frontend
+          npm test
+
+      - name: "Front-end : Build with Webpack"
+        run: |
+          cd frontend
+          mkdir -p dist
+          npm run build:prod
+
+      - name: "Front-end : Sync assets folder to dist using rsync"
+        run: |
+          cd frontend
+          mkdir -p dist/assets
+          rsync -av src/assets/ dist/assets/
+
+      # BACK-END WORKFLOW
+      - name : "Back-end : Install dependencies"
+        run: |
+          cd backend
+          npm install
+
+      - name: "Back-end : Run ESLint without autofix"
+        run: |
+          cd backend
+          npx eslint .
+
+      - name: "Back-end : Run API Tests"
+        run: |
+          cd backend
+          npm run test
+
+      # DEPLOYMENT
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v3'
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+
+      # FRONT-END DEPLOYMENT
+      - id: 'upload-folder'
+        name : 'Updload front to Google Cloud bucket'
+        uses: 'google-github-actions/upload-cloud-storage@v3'
+        with:
+          path: '/frontend/dist'
+          destination: ${{ variables.BUCKET_NAME }}
+          parent: false
