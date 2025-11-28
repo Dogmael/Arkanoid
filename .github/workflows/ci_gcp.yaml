@@ -1,4 +1,4 @@
-name: Lint, Test, Build, and Deploy
+name: Lint, Test, Build, and Deploy on Google Cloud
 
 on: 
   push:
@@ -26,7 +26,8 @@ jobs:
           --health-retries 5
 
     permissions:
-      contents: write
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout code

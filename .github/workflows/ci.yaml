@@ -1,4 +1,4 @@
-name: Lint, Test, Build, and Deploy
+name: Lint, Test, Build, and Deploy on GithHub Pages
 
 on: 
   push:
