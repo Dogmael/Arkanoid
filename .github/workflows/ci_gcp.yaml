@@ -100,5 +100,5 @@ jobs:
         uses: 'google-github-actions/upload-cloud-storage@v3'
         with:
           path: '/frontend/dist'
-          destination: ${{ variables.BUCKET_NAME }}
+          destination: ${{ vars.BUCKET_NAME }}
           parent: false
