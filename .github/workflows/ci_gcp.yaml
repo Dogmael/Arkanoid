@@ -116,8 +116,8 @@ jobs:
       ## BACK-END DEPLOYMENT
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.ARTIFACT_REGISTRY_URL }}:latest -f backend/docker/dockerfile.prod .
-          docker push ${{ secrets.ARTIFACT_REGISTRY_URL }}:latest
+          docker build -t ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest -f backend/docker/dockerfile.prod .
+          docker push ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
 
       # - name: Deploy to Cloud Run
       #   run: |
