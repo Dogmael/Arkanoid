@@ -87,7 +87,7 @@ jobs:
       #     cd backend
       #     npm run test
 
-      # AUTHENTIFICATION TO Google Cloud
+      # AUTHENTIFICATION TO GOOGLE CLOUD
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v3'
@@ -95,9 +95,14 @@ jobs:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
 
-      # INSTALL Google Cloud SDK
+      # INSTALL GOOGLE CLOUD SDK
       - name: 'Set up Google Cloud SKD'
         uses: 'google-github-actions/setup-gcloud@v3'
+
+      # CONFIGURE DOCKER TO USE GOOGLE CLOUD CREDENTIALS
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker europe-west9-docker.pkg.dev
 
       # FRONT-END DEPLOYMENT
       - id: 'upload-folder'
