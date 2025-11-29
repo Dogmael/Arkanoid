@@ -4,3 +4,4 @@ dist/
 .env
 coverage/
 gha-creds-*.json
+config.json

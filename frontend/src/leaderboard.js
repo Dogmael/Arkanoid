@@ -1,23 +1,23 @@
-document.addEventListener('DOMContentLoaded', () => {
-	loadLeaderboard();
-});
+let config = null;
 
-async function loadLeaderboard (params) {
-	const leaderboardUrl = 'http://127.0.0.1:3000/users/leaderBoard'; // How to manage properly my base API url ?
+async function loadConfig () {
+	config = await fetch('/config.json').then(r => r.json());
+}
 
-	try {
-		const response = await fetch(leaderboardUrl);
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
+function getUrl (endpoint) {
+	return config.API_BASE_URL + endpoint;
+}
 
-		// Response is a promise because the body of http response is a stream of data (ReadableStream)
-		const leaders = await response.json();
-
-		// Add new rows to DOM
-		addLeadersToLeaderBoard(leaders);
-	} catch (error) {
-		console.error(error.message);
+function getRank (ordrer) {
+	switch (ordrer) {
+		case 0:
+			return '1ST';
+		case 1:
+			return '2ND';
+		case 2:
+			return '3RD';
+		default:
+			return ordrer + 'TH';
 	}
 }
 
@@ -37,15 +37,26 @@ function addLeadersToLeaderBoard (leaders) {
 	}
 }
 
-function getRank (ordrer) {
-	switch (ordrer) {
-		case 0:
-			return '1ST';
-		case 1:
-			return '2ND';
-		case 2:
-			return '3RD';
-		default:
-			return ordrer + 'TH';
+async function loadLeaderboard (params) {
+	const leaderboardUrl = getUrl('/users/leaderBoard'); // How to manage properly my base API url ?
+
+	try {
+		const response = await fetch(leaderboardUrl);
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
+
+		// Response is a promise because the body of http response is a stream of data (ReadableStream)
+		const leaders = await response.json();
+
+		// Add new rows to DOM
+		addLeadersToLeaderBoard(leaders);
+	} catch (error) {
+		console.error(error.message);
 	}
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+	await loadConfig();
+	loadLeaderboard();
+});
