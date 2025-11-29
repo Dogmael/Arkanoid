@@ -1,0 +1,37 @@
+# === Build stage ===
+FROM node:22-slim AS builder
+
+# Définir le dossier de travail
+WORKDIR /app
+
+# Copier les fichiers du monorepo pour installer les dépendances
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+# Aller dans le dossier backend et copier les fichiers spécifiques
+WORKDIR /app/backend
+COPY backend/package.json backend/package-lock.json ./
+
+# Installer uniquement les dépendances de prod du backend
+RUN npm ci --omit=dev
+
+# Copier tout le backend et builder
+COPY backend/ ./
+RUN npm run build
+
+# === Runtime stage ===
+FROM node:22-slim
+
+# Définir le dossier de travail
+WORKDIR /app/backend
+
+# Copier les fichiers buildés et les node_modules depuis le builder
+COPY --from=builder /app/backend/dist ./dist
+COPY --from=builder /app/backend/node_modules ./node_modules
+COPY --from=builder /app/backend/package.json ./package.json
+
+# Exposer le port
+EXPOSE 8080
+
+# Commande pour lancer le serveur
+CMD ["node", "dist/src/serveur.js"]

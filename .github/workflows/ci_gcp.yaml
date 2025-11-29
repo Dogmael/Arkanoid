@@ -87,13 +87,17 @@ jobs:
           cd backend
           npm run test
 
-      # DEPLOYMENT
+      # AUTHENTIFICATION TO Google Cloud
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v3'
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
+
+      # INSTALL Google Cloud SDK
+      - name: 'Set up Google Cloud SKD'
+        uses: 'google-github-actions/setup-gcloud@v3'
 
       # FRONT-END DEPLOYMENT
       - id: 'upload-folder'
@@ -103,3 +107,15 @@ jobs:
           path: './frontend/dist'
           destination: ${{ vars.BUCKET_NAME }}
           parent: false
+
+      ## BACK-END DEPLOYMENT
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.ARTIFACT_REGISTRY_URL }}:latest -f docker/dockerfile.prod .
+          docker push ${{ secrets.ARTIFACT_REGISTRY_URL }}:latest
+
+      # - name: Deploy to Cloud Run
+      #   run: |
+      #     gcloud run deploy my-backend \
+      #       --region europe-west1 \
+      #       --set-env-vars NODE_ENV=$NODE_ENV,DB_URL=$DB_URL
