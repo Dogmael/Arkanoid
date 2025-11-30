@@ -1,0 +1,119 @@
+:root {
+    --red-cmyk: #FF102Aff;
+}
+
+@font-face {
+    font-family: 'MyWebFont';
+    src: url(328fa1f6ea4bc2d405a7.woff) format('woff');
+}
+
+/* Styles globaux */
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    background-color: black;
+    color: var(--red-cmyk);
+    font-family: 'MyWebFont', Arial;
+    touch-action: none;
+}
+
+#text {
+    margin-top: 10vh;
+    font-size: 3vh;
+    text-align: center;
+}
+
+/* Colonnes */
+#left-column {
+    width: 5%;
+}
+
+#center-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 100%;
+}
+
+#right-column {
+    width: 35%;
+    min-width: 20vw;
+    padding: 1vw;
+    box-sizing: border-box;
+}
+
+#arkanoid {
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+#logo {
+    display: block;
+    margin: 0 auto;
+    max-height: 50%;
+    max-width: 65%;
+}
+
+/* For vertical devices */
+@media (max-aspect-ratio: 4/3) {
+
+    html,
+    body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #right-column {
+        order: -1;
+        width: 60%;
+        text-align: center;
+        height: 20vh;
+    }
+
+    #center-column {
+        height: 80vh;
+    }
+
+    #left-column {
+        display: none;
+    }
+
+    #logo {
+        max-height: 40%;
+    }
+
+    #text {
+        margin-top: 2vh;
+        font-size: 2.5vh;
+        display: flex;
+        /* Pour créer une flexbox */
+        flex-wrap: wrap;
+        /* Pour que les éléments enfants passent à la ligne si besoin */
+        gap: 5vw;
+        /* Pour espacer les éléments enfants */
+        row-gap: 3vh;
+        justify-content: center;
+        /* Pour centrer horizontalement les éléments enfants */
+    }
+
+    #text p {
+        margin: 0;
+        /* Supprime les marges par défaut des paragraphes */
+        white-space: nowrap;
+        /* Empêche le contenu de se diviser sur plusieurs lignes dans les paragraphes */
+    }
+
+    #arkanoid {
+        /* on met la hauteur égale à celle de la ligne qui contient le canvas */
+        max-height: 70vh;
+    }
+}
