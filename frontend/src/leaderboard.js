@@ -1,3 +1,5 @@
+import './arkanoid.css';
+
 let config = null;
 
 async function loadConfig () {

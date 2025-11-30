@@ -13,10 +13,13 @@ export default (env) => {
 
 	return {
 		mode: isProd ? 'production' : 'development',
-		entry: './src/arkanoid.js',
+		entry: {
+			arkanoid: './src/arkanoid.js',
+			leaderboard: './src/leaderboard.js'
+		},
 		output: {
 			path: path.resolve(__dirname, 'dist'),
-			filename: 'arkanoid.js'
+			filename: '[name].js'
 		},
 		module: {
 			rules: [
@@ -58,10 +61,15 @@ export default (env) => {
 			new HtmlWebpackPlugin({
 				template: path.resolve(__dirname, 'src', 'arkanoid.html'),
 				filename: 'arkanoid.html',
-				inject: false, // Désactive l'injection automatique des scripts, EVITE D AVOIR DEUX SCRIPT JS EXECUTE EN PARALELLE
+				inject: false, // Désactive l'injection automatique des scripts
+			}),
+			new HtmlWebpackPlugin({
+				template: path.resolve(__dirname, 'src', 'leaderboard.html'),
+				filename: 'leaderboard.html',
+				inject: false,
 			}),
 			new MiniCssExtractPlugin({
-				filename: 'arkanoid.css'
+				filename: '[name].css'
 			})
 		],
 		resolve: {
