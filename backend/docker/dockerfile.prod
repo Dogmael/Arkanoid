@@ -34,7 +34,7 @@ COPY --from=builder /app/backend/node_modules ./node_modules
 COPY --from=builder /app/backend/package.json ./package.json
 
 # Exposer le port
-EXPOSE 8080
+EXPOSE 3000
 
 # Commande pour lancer le serveur
 CMD ["node", "dist/src/serveur.js"]

@@ -11,7 +11,7 @@ export default function buildApp (options: FastifyServerOptions = {}) {
 	fastify.register(prismaPlugin);
 	fastify.register(helmet);
 	fastify.register(cors, {
-		origin: 'http://localhost:8080', // Dev config
+		origin: process.env.ALLOWED_ORIGIN,
 	});
 
 	// Register routes
