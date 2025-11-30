@@ -3,7 +3,10 @@ import './arkanoid.css';
 let config = null;
 
 async function loadConfig () {
-	config = await fetch('/config.json').then(r => r.json());
+	const url = window.APP_CONFIG_URL || '/config.json';
+	const res = await fetch(url);
+	if (!res.ok) throw new Error(`Config load failed: ${res.status}`);
+	config = await res.json();
 }
 
 function getUrl (endpoint) {
