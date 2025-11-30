@@ -4,7 +4,7 @@
     "test": "jest",
     "serve:dev": "webpack serve --env serve=dev",
     "serve:prod": "webpack --mode production && webpack serve --env serve=prod",
-    "build:prod": "webpack --mode production",
+    "build:prod": "webpack --mode production --env serve=prod",
     "build:dev": "webpack --mode development"
   },
   "devDependencies": {
