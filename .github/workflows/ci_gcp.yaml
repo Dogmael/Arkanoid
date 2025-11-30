@@ -60,8 +60,6 @@ jobs:
       #     npm test
 
       - name: "Front-end : Build with Webpack"
-        env:
-          BASE_ASSETS_PATH: ${{vars.BASE_ASSETS_PATH}}
         run: |
           cd frontend
           mkdir -p dist

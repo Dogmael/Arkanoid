@@ -9,9 +9,6 @@ const __dirname = path.dirname(__filename);
 
 export default (env) => {
 	const isProd = env.serve === 'prod'; // Passez "prod" ou "dev" via la ligne de commande
-	console.log('=== DEBUG Webpack Config ===');
-	console.log('env.serve:', env.serve);
-	console.log('process.env.BASE_ASSETS_PATH:', process.env.BASE_ASSETS_PATH);
 	const serveDirectory = isProd ? 'dist' : 'src';
 
 	return {
@@ -22,7 +19,6 @@ export default (env) => {
 		},
 		output: {
 			path: path.resolve(__dirname, 'dist'),
-			publicPath: isProd ? process.env.BASE_ASSETS_PATH : '', // n'est pas dispo lors du build sur github action
 			filename: '[name].js',
 		},
 		module: {
