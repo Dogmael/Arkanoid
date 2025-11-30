@@ -19,7 +19,8 @@ export default (env) => {
 		},
 		output: {
 			path: path.resolve(__dirname, 'dist'),
-			filename: '[name].js'
+			publicPath: isProd ? env.BASE_ASSETS_PATH : '',
+			filename: '[name].js',
 		},
 		module: {
 			rules: [
