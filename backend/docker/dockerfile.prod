@@ -1,9 +1,6 @@
 # === Build stage ===
 FROM node:22-slim AS builder
 
-# Install OpenSSL for Prisma
-RUN apt-get update -y && apt-get install -y openssl
-
 # Définir le dossier de travail
 WORKDIR /app
 
@@ -27,6 +24,9 @@ FROM node:22-slim
 
 # Définir le dossier de travail
 WORKDIR /app/backend
+
+# Install OpenSSL for Prisma
+RUN apt-get update -y && apt-get install -y openssl
 
 # Copier les fichiers buildés et les node_modules depuis le builder
 COPY --from=builder /app/backend/dist ./dist
