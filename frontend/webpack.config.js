@@ -19,7 +19,7 @@ export default (env) => {
 		},
 		output: {
 			path: path.resolve(__dirname, 'dist'),
-			publicPath: isProd ? env.BASE_ASSETS_PATH : '',
+			publicPath: isProd ? process.env.BASE_ASSETS_PATH : '', // n'est pas dispo lors du build sur github action
 			filename: '[name].js',
 		},
 		module: {
