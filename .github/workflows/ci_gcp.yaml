@@ -1,6 +1,6 @@
 name: Lint, Test, Build, and Deploy on Google Cloud
 
-on: 
+on:
   push:
     branches:
       - main
@@ -17,7 +17,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: test
           POSTGRES_DB: testdb
-        ports :
+        ports:
           - 5432:5432
         options: >-
           --health-cmd pg_isready
@@ -32,12 +32,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      
+
       # PROJECT SET UP
       - name: "Project : Set up Node.js"
         uses: actions/setup-node@v5
         with:
-          node-version: '22.9.0'
+          node-version: "22.9.0"
 
       - name: "Project : Install dependencies for project"
         run: |
@@ -72,7 +72,7 @@ jobs:
           rsync -av src/assets/ dist/assets/
 
       # BACK-END WORKFLOW
-      - name : "Back-end : Install dependencies"
+      - name: "Back-end : Install dependencies"
         run: |
           cd backend
           npm install
@@ -87,40 +87,43 @@ jobs:
       #     cd backend
       #     npm run test
 
+      #SETP UP GOOGLE CLOUD
       # AUTHENTIFICATION TO GOOGLE CLOUD
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v3'
+      - name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v3"
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
 
       # INSTALL GOOGLE CLOUD SDK
-      - name: 'Set up Google Cloud SKD'
-        uses: 'google-github-actions/setup-gcloud@v3'
+      - name: "Set up Google Cloud SKD"
+        uses: "google-github-actions/setup-gcloud@v3"
 
       # CONFIGURE DOCKER TO USE GOOGLE CLOUD CREDENTIALS
       - name: Configure Docker
         run: |
           gcloud auth configure-docker europe-west9-docker.pkg.dev
 
-      # FRONT-END DEPLOYMENT
-      - id: 'upload-folder'
-        name : 'Updload front to Google Cloud bucket'
-        uses: 'google-github-actions/upload-cloud-storage@v3'
-        with:
-          path: './frontend/dist'
-          destination: ${{ vars.BUCKET_NAME }}
-          parent: false
-
-      ## BACK-END DEPLOYMENT
+      # BACK-END DEPLOYMENT
+      ## BUILD AND PUSH DOCKER IMAGE ON GOOGLE CLOUD ARTIFACT
       - name: Build and Push Docker Image
         run: |
           docker build -t ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest -f backend/docker/dockerfile.prod .
           docker push ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
 
-      # - name: Deploy to Cloud Run
-      #   run: |
-      #     gcloud run deploy my-backend \
-      #       --region europe-west1 \
-      #       --set-env-vars NODE_ENV=$NODE_ENV,DB_URL=$DB_URL
+      ## DEPLOY IMAGE ON CLOUD RUN
+      - name: Deploy on Cloud Run
+        id: deploy
+        uses: "google-github-actions/deploy-cloudrun@v3"
+        with:
+          service: ${{ vars.CLOUD_RUN_SERIVCE_NAME }}
+          image: ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
+
+      # FRONT-END DEPLOYMENT
+      - id: "upload-folder"
+        name: "Updload front to Google Cloud bucket"
+        uses: "google-github-actions/upload-cloud-storage@v3"
+        with:
+          path: "./frontend/dist"
+          destination: ${{ vars.BUCKET_NAME }}
+          parent: false
