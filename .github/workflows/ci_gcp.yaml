@@ -49,15 +49,15 @@ jobs:
           cd frontend
           npm install
 
-      # - name: "Front-end : Run ESLint without autofix"
-      #   run: |
-      #     cd frontend
-      #     npx eslint .
+      - name: "Front-end : Run ESLint without autofix"
+        run: |
+          cd frontend
+          npx eslint .
 
-      # - name: "Front-end : Run Jest tests"
-      #   run: |
-      #     cd frontend
-      #     npm test
+      - name: "Front-end : Run Jest tests"
+        run: |
+          cd frontend
+          npm test
 
       - name: "Front-end : Build with Webpack"
         run: |
@@ -72,20 +72,20 @@ jobs:
           rsync -av src/assets/ dist/assets/
 
       # BACK-END WORKFLOW
-      # - name: "Back-end : Install dependencies"
-      #   run: |
-      #     cd backend
-      #     npm install
+      - name: "Back-end : Install dependencies"
+        run: |
+          cd backend
+          npm install
 
-      # - name: "Back-end : Run ESLint without autofix"
-      #   run: |
-      #     cd backend
-      #     npx eslint .
+      - name: "Back-end : Run ESLint without autofix"
+        run: |
+          cd backend
+          npx eslint .
 
-      # - name: "Back-end : Run API Tests"
-      #   run: |
-      #     cd backend
-      #     npm run test
+      - name: "Back-end : Run API Tests"
+        run: |
+          cd backend
+          npm run test
 
       #SETP UP GOOGLE CLOUD
       # AUTHENTIFICATION TO GOOGLE CLOUD
@@ -96,29 +96,29 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
 
       # INSTALL GOOGLE CLOUD SDK
-      # - name: "Set up Google Cloud SKD"
-      #   uses: "google-github-actions/setup-gcloud@v3"
+      - name: "Set up Google Cloud SKD"
+        uses: "google-github-actions/setup-gcloud@v3"
 
       # CONFIGURE DOCKER TO USE GOOGLE CLOUD CREDENTIALS
-      # - name: Configure Docker
-      #   run: |
-      #     gcloud auth configure-docker europe-west9-docker.pkg.dev
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker europe-west9-docker.pkg.dev
 
       # BACK-END DEPLOYMENT
       ## BUILD AND PUSH DOCKER IMAGE ON GOOGLE CLOUD ARTIFACT
-      # - name: Build and Push Docker Image
-      #   run: |
-      #     docker build -t ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest -f backend/docker/dockerfile.prod .
-      #     docker push ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest -f backend/docker/dockerfile.prod .
+          docker push ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
 
       # ## DEPLOY IMAGE ON CLOUD RUN
-      # - name: Deploy on Cloud Run
-      #   id: deploy
-      #   uses: "google-github-actions/deploy-cloudrun@v3"
-      #   with:
-      #     region: europe-west9
-      #     service: ${{ vars.CLOUD_RUN_SERIVCE_NAME }}
-      #     image: ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
+      - name: Deploy on Cloud Run
+        id: deploy
+        uses: "google-github-actions/deploy-cloudrun@v3"
+        with:
+          region: europe-west9
+          service: ${{ vars.CLOUD_RUN_SERIVCE_NAME }}
+          image: ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
 
       # FRONT-END DEPLOYMENT
       # TODO : Add config.json support
