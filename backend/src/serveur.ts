@@ -20,7 +20,7 @@ const server = buildApp({
 
 server.listen({
 	port: parseInt(process.env.PORT ?? '3000'),
-	host: '::',
+	host: '0.0.0.0',
 }, (err, address) => {
 	if (err) {
 		server.log.error(err);
