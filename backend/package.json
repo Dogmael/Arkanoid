@@ -1,6 +1,5 @@
 {
-  "name": "back",
-  "version": "1.0.0",
+  "name": "backend",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
@@ -11,10 +10,6 @@
     "migrate": "prisma migrate dev",
     "test": "jest"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "@fastify/cors": "^11.1.0",
     "@fastify/helmet": "^13.0.1",
