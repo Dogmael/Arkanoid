@@ -17,7 +17,17 @@ Rebuild Arkanoid in javascript using canvas for learning purpose
 - CSS class name: `kebab-case`
 - CSS id name: `kebab-case`
 
-## Start the project in docker for development
+## Start the project for development
+
+### Backend using Docker Compose
+From the root folder run
 ```bash
 docker compose -f docker-compose.dev.yml up
+```
+### Frontend using Webpack Dev Server
+From the root folder run
+```bash
+cd frontend
+npm install
+npm run serve:dev
 ```

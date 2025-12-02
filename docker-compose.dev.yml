@@ -12,13 +12,3 @@ services:
     env_file:
       - ./backend/.env
     command: npm run start:dev-watch
-
-  frontend:
-    build:
-      context: .
-      dockerfile: frontend/docker/dockerfile.dev
-    container_name: arkanoid_front
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./frontend:/app
