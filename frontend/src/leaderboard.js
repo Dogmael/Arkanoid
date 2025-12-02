@@ -1,4 +1,4 @@
-import './arkanoid.css';
+import './leaderboard.css';
 
 let config = null;
 
