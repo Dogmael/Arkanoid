@@ -4,6 +4,7 @@
   "scripts": {
     "test": "jest",
     "serve:dev": "webpack serve --env serve=dev",
+    "serve:dev:watch-config": "nodemon --watch webpack.config.js --ext js --exec \"npm run serve:dev\" --signal SIGINT",
     "serve:prod": "webpack --mode production && webpack serve --env serve=prod",
     "build:prod": "webpack --mode production --env serve=prod",
     "build:dev": "webpack --mode development"
