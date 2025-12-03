@@ -5,13 +5,13 @@
   "license": "ISC",
   "type": "module",
   "workspaces": [
-    "front",
-    "back"
+    "frontend",
+    "backend"
   ],
   "scripts": {
     "test": "jest",
-    "test:frontend": "npm test --workspace=front",
-    "test:backend": "npm test --workspace=back"
+    "test:frontend": "npm test --workspace=frontend",
+    "test:backend": "npm test --workspace=backend"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

@@ -1,14 +1,17 @@
-
-services: 
+services:
   backend:
     build:
       context: .
-      dockerfile: backend/docker/dockerfile.dev
+      dockerfile: backend/docker/Dockerfile.test
     container_name: arkanoid_back
     ports:
       - "3000:3000"
     volumes:
       - ./backend:/app/backend
+      - node_modules:/app/node_modules # To protect node modules from container
     env_file:
       - ./backend/.env
     command: npm run start:dev-watch
+
+volumes:
+  node_modules:

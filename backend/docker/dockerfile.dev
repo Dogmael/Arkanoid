@@ -1,24 +1,27 @@
-# Utiliser une image Node.js
+# We get an Node.js image. We don't get an Alpine one because it don't have apt by default.
 FROM node:22-slim
 
-# Install OpenSSL for Prisma
+# We install openssl for Prisma
 RUN apt-get update -y && apt-get install -y openssl
 
-# Définir le dossier de travail
+# We create en /app folder and get in
 WORKDIR /app
 
-# Copier les fichiers de configuration du monorepo
-COPY package.json package-lock.json ./
+# We copy package.json and package-lock.json from root to be able to run "npm ci" (more secure than npm install)
+COPY ./package.json ./package-lock.json ./
 
-# Installer TOUT le monorepo, mais on ne build que le workspace "back"
+# We only copy package.json from ./backend because we are using npm workspage -> only one package-lock.json and one ./node_modules folder
+COPY ./backend/package.json ./backend/
+
+# Need for prisma generate
+COPY ./backend/prisma/schema.prisma ./backend/prisma/
+
+# Check if package.json and package-lock.json are consistent before installing exacte version from package-lock.json
 RUN npm ci
 
-# Aller dans le dossier back et build
 WORKDIR /app/backend
 
-# Copie le fichier de configuration du backend
-COPY backend/package.json backend/package-lock.json ./
+# Generate in node_modules
+RUN npx prisma generate
 
-# Installe les dépendances
-RUN npm ci
 EXPOSE 3000
