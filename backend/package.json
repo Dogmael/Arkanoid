@@ -5,7 +5,7 @@
   "scripts": {
     "start:dev": "npm run build && npm run start",
     "start:dev-watch": "nodemon --watch src --ext ts --exec ts-node src/serveur.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.prod.json",
     "start": "node dist/src/serveur.js",
     "migrate": "prisma migrate dev",
     "test": "jest"
@@ -17,7 +17,6 @@
     "@fastify/rate-limit": "^10.2.1",
     "@prisma/client": "^6.1.0",
     "fastify": "^5.2.1",
-    "knex": "^3.1.0",
     "pg": "^8.13.1"
   },
   "devDependencies": {
