@@ -41,13 +41,13 @@ jobs:
 
       - name: "Project : Install dependencies for project"
         run: |
-          npm ci
+          npm install
 
       # FRONT-END WORKFLOW
       - name: "Front-end : Install dependencies"
         run: |
           cd frontend
-          npm ci
+          npm install
 
       - name: "Front-end : Run ESLint without autofix"
         run: |
@@ -75,7 +75,7 @@ jobs:
       - name: "Back-end : Install dependencies"
         run: |
           cd backend
-          npm ci
+          npm install
 
       - name: "Back-end : Run ESLint without autofix"
         run: |
