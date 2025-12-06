@@ -21,7 +21,7 @@ Rebuild Arkanoid in javascript using canvas for learning purpose
 All commands are to be run from the root folder.
 
 ### Backend using Docker
-Use docker-compose during devloppement.
+Using docker-compose during devloppement.
 ```bash
 docker compose -f docker-compose.dev.yml up
 ```
@@ -32,7 +32,8 @@ docker build -t arkanoid-backend -f backend/docker/dockerfile.prod .
 docker run --env-file ./backend/.env.fake.prod -p 3000:3000 arkanoid-backend
 ```
 
-### Frontend using Webpack Dev Server
+### Frontend using webpack dev server
+Install dans launch the frontend in development mode.
 ```bash
 cd frontend
 npm install
