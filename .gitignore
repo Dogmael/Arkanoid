@@ -2,6 +2,7 @@ node_modules/
 dist/
 .DS_Store
 .env
+.env.fake.prod
 coverage/
 gha-creds-*.json
 config.json

@@ -17,15 +17,22 @@ Rebuild Arkanoid in javascript using canvas for learning purpose
 - CSS class name: `kebab-case`
 - CSS id name: `kebab-case`
 
-## Start the project for development
+## Project development
+All commands are to be run from the root folder.
 
-### Backend using Docker Compose
-From the root folder run
+### Backend using Docker
+Use docker-compose during devloppement.
 ```bash
 docker compose -f docker-compose.dev.yml up
 ```
+
+Build production images and run the containers.
+```bash
+docker build -t arkanoid-backend -f backend/docker/dockerfile.prod .
+docker run --env-file ./backend/.env.fake.prod -p 3000:3000 arkanoid-backend
+```
+
 ### Frontend using Webpack Dev Server
-From the root folder run
 ```bash
 cd frontend
 npm install
