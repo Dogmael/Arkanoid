@@ -41,13 +41,13 @@ jobs:
 
       - name: "Project : Install dependencies for project"
         run: |
-          npm install
+          npm ci
 
       # FRONT-END WORKFLOW
       - name: "Front-end : Install dependencies"
         run: |
           cd frontend
-          npm install
+          npm ci
 
       - name: "Front-end : Run ESLint without autofix"
         run: |
@@ -75,7 +75,7 @@ jobs:
       - name: "Back-end : Install dependencies"
         run: |
           cd backend
-          npm install
+          npm ci
 
       - name: "Back-end : Run ESLint without autofix"
         run: |
@@ -108,7 +108,6 @@ jobs:
       ## BUILD AND PUSH DOCKER IMAGE ON GOOGLE CLOUD ARTIFACT
       - name: Build and Push Docker Image
         run: |
-          cd ..
           docker build -t ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest -f backend/docker/dockerfile.prod .
           docker push ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
 
