@@ -116,8 +116,11 @@ jobs:
           cd frontend
           mkdir -p dist/configuration
           cp src/configuration/config.template.json dist/configuration/config.json
-          jq --arg url "${{ steps.deploy.outputs.url }}" -i \
-            '.API_BASE_URL = $url' dist/configuration/config.json
+          jq --arg url "${{ steps.deploy.outputs.url }}" \
+            '.API_BASE_URL = $url' \
+            dist/configuration/config.json > dist/configuration/config.tmp
+          mv dist/configuration/config.tmp dist/configuration/config.json
+
 
       - name: "Updload front to Google Cloud bucket"
         uses: "google-github-actions/upload-cloud-storage@v3"
