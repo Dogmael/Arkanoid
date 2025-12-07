@@ -39,16 +39,11 @@ jobs:
         with:
           node-version: "22.9.0"
 
-      - name: "Project : Install dependencies for project"
+      - name: "Project : Install dependencies for project using workspaces"
         run: |
           npm ci
 
       # FRONT-END WORKFLOW
-      - name: "Front-end : Install dependencies"
-        run: |
-          cd frontend
-          npm ci
-
       - name: "Front-end : Run ESLint without autofix"
         run: |
           cd frontend
@@ -72,11 +67,6 @@ jobs:
           rsync -av src/assets/ dist/assets/
 
       # BACK-END WORKFLOW
-      - name: "Back-end : Install dependencies"
-        run: |
-          cd backend
-          npm ci
-
       - name: "Back-end : Run ESLint without autofix"
         run: |
           cd backend
