@@ -7,21 +7,19 @@ RUN apt-get update -y && apt-get install -y openssl
 # We create en /app folder and get in
 WORKDIR /app
 
-# We copy package.json and package-lock.json from root to be able to run "npm ci" (more secure than npm install)
-COPY ./package.json ./package-lock.json ./
-
-# We only copy package.json from ./backend because we are using npm workspage -> only one package-lock.json and one ./node_modules folder
+# We copy package.json from root and backend to be able to run "npm install"
+COPY ./package.json ./
 COPY ./backend/package.json ./backend/
 
 # Need for prisma generate
 COPY ./backend/prisma/schema.prisma ./backend/prisma/
 
-# Check if package.json and package-lock.json are consistent before installing exacte version from package-lock.json
-RUN npm ci
+# Install from root only, using npm workspaces
+RUN npm install
 
 WORKDIR /app/backend
 
-# Generate in node_modules
+# Generate prisma schema in node_modules
 RUN npx prisma generate
 
 EXPOSE 3000
