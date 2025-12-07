@@ -111,9 +111,13 @@ jobs:
           image: ${{ secrets.ARTIFACT_REGISTRY_URL }}/backend:latest
 
       # FRONT-END DEPLOYMENT
-      # TODO : Add config.json support
-      - id: "upload-folder"
-        name: "Updload front to Google Cloud bucket"
+      - name: Adapt config.template.json to config.json
+        run: |
+          cat > config.json
+          cp config.template.json config.template.json
+          jq -i '.API_BASE_URL = "${{ steps.deploy.outputs.url }}"' config.json
+
+      - name: "Updload front to Google Cloud bucket"
         uses: "google-github-actions/upload-cloud-storage@v3"
         with:
           path: "./frontend/dist"
